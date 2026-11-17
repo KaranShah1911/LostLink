@@ -429,7 +429,7 @@ All colours are defined once in `mobile/src/constants.ts`:
 
 Item cards also have a red or green strip on the left for LOST or FOUND. Items without a photo show their **category icon** (phone, ID card, wallet, backpack, book, key, ...).
 
-**Campus photo on other screens.** The same photo, through one `CampusBackdrop` component, is shown in its natural colours behind the Login and Sign up headers (with only a light shadow behind the white text) and faded behind the error ("Try again") screen.
+**Campus photo on other screens.** The same photo, through one `CampusBackdrop` component, is shown full-screen and faded behind Login, Sign up, Profile and the error ("Try again") screen, with the content on white cards above it. Browse, the report forms, Item Details, My Activity and all admin screens use plain theme backgrounds.
 
 **Home background.** The student Home screen shows a genuine photograph of the VJTI quadrangle and dome behind its content:
 
@@ -440,6 +440,45 @@ Item cards also have a red or green strip on the left for LOST or FOUND. Items w
 - **Fallback:** if it fails to load, a plain light teal background is used instead.
 
 All other screens use plain light backgrounds with white cards.
+
+### 7.9 Additional features
+
+**In-app notifications.**
+- **The bell:** students see a bell with an unread count next to their avatar. The count refreshes every 30 seconds, when the app returns to the foreground, and after notifications are read.
+- **The screen:** the Notifications screen lists title, message, time and read/unread state. Tapping a notification marks it as read and opens the related item, and "Mark all read" clears the count.
+- **Storage:** notifications are embedded in the user's document (section 8.1).
+- **Not push notifications:** these are in-app only; no third-party notification service is used.
+
+**Advanced Browse filters.**
+- The Filter button opens a panel with:
+  - item type;
+  - category;
+  - location (text match);
+  - date reported (24 hours / 7 days / 30 days);
+  - status (active / recovered);
+  - sort order (newest / oldest).
+- Nothing changes until **Apply Filters**; **Clear Filters** resets everything.
+- Active filters appear as removable chips under the search bar, and the search box is sent to the server too, 400 ms after typing stops.
+- All filtering happens in MongoDB through `GET /api/items` query parameters.
+
+**Claim progress tracker.**
+- A three-step timeline: Claim submitted → Waiting for reporter → Approved / Rejected, with the date and time of each step.
+- **Approved:** it shows a safe-collection message.
+- **Rejected:** it shows the reason.
+- It is drawn only from the claim's `status`, `createdAt` and `updatedAt` stored in MongoDB, so a user cannot change it.
+- It appears in My Activity → My Claims and on the item page for the claimant.
+
+**How LostLink Works and Safety Guidelines.** Two read-only screens, opened from cards on Home and from the Help section of Profile.
+- **How LostLink Works:** numbered steps for losing, finding and claiming an item, matching the real app.
+- **Safety Guidelines:** covers ownership verification, personal information, safe collection, responsible reporting and communication.
+
+**Theme selector.**
+- **The themes:** Profile → Theme offers VJTI Classic, Ocean Breeze, Sunset, Lavender and Forest, each with a small preview.
+- **How it works:** a theme only changes the "brand" colours (primary, primary light, secondary, secondary soft, highlight, background). These are defined once in `THEMES` in `src/constants.ts`.
+- **Fixed colours:** the meaningful colours (`palette`: LOST red, FOUND green, PENDING amber, claims purple, and so on) never change.
+- **In code:** every component reads its colours through `useTheme(makeStyles)` (`src/context/ThemeContext.tsx`), so the whole app re-colours instantly.
+- **Saving:** the choice is saved on the phone with Secure Store, so even the login screen opens in it, and in the user's `selectedTheme` field, so it follows the user to another phone.
+- **Campus photo:** the photo is the same in every theme.
 
 ---
 
@@ -507,7 +546,23 @@ erDiagram
 | `role` | String | `STUDENT` (default) or `ADMIN` |
 | `profileImage` | String | Optional, Cloudinary HTTPS URL |
 | `profileImagePublicId` | String | Optional, used to delete the old photo |
+| `selectedTheme` | String | `vjti` (default), `ocean`, `sunset`, `lavender` or `forest` |
+| `notifications` | Array of notification sub-documents | Newest 50 kept, `select: false` |
 | `createdAt`, `updatedAt` | Date | Mongoose timestamps |
+
+**Embedded notification sub-document:**
+
+| Field | Type | Rules |
+|---|---|---|
+| `_id` | ObjectId | Generated automatically |
+| `type` | String | `CLAIM_RECEIVED`, `CLAIM_APPROVED`, `CLAIM_REJECTED`, `CLAIM_CLOSED` or `REPORT_REMOVED` |
+| `title`, `message` | String | Short text shown in the app |
+| `relatedItem` | ObjectId → Item | Optional; tapping the notification opens this item |
+| `relatedClaim` | ObjectId | Optional; the claim inside that item |
+| `isRead` | Boolean | `false` until the user opens it or marks all as read |
+| `createdAt` | Date | When the event happened |
+
+Notifications are written only by the backend (`backend/utils/notify.ts`), right after the real event: a claim is submitted, approved, rejected or closed, or an admin removes a report. Those events come from conditional single-document updates that can succeed only once, so a notification is never duplicated. `$push` with `$slice: -50` keeps only the newest 50 per user.
 
 **Indexes:** unique index on `email`.
 
@@ -527,6 +582,8 @@ erDiagram
 | `reportedBy` | ObjectId → User | Required |
 | `status` | String | `ACTIVE` (default) or `RECOVERED` |
 | `claims` | Array of claim sub-documents | Default `[]`, `select: false` |
+| `submissionId` | String | Optional idempotency key sent by the app (one per report form) |
+| `submissionHash` | String | Fingerprint of the details sent with that key, `select: false` |
 | `createdAt`, `updatedAt` | Date | Mongoose timestamps |
 
 **Embedded claim sub-document:**
@@ -538,6 +595,7 @@ erDiagram
 | `description` | String | Required, 10–1000 characters, private |
 | `status` | String | `PENDING` (default), `APPROVED` or `REJECTED` |
 | `rejectionReason` | String | Optional, up to 300 characters |
+| `requestId` | String | Optional idempotency key of the claim request |
 | `createdAt`, `updatedAt` | Date | Timestamps |
 
 **Indexes:**
@@ -545,6 +603,7 @@ erDiagram
 - `{ status: 1, type: 1, createdAt: -1 }` speeds up Browse/Home (active items filtered by type, newest first).
 - `{ reportedBy: 1, createdAt: -1 }` speeds up My Reports and Claims Received.
 - `{ 'claims.claimedBy': 1 }` speeds up My Claims.
+- `{ reportedBy: 1, submissionId: 1 }` **unique, partial** (`partialFilterExpression: { submissionId: { $type: 'string' } }`) guarantees one report per submission id. Reports created before this field existed have no `submissionId` and are not covered, so the index was built without touching them.
 
 ### 8.3 Sample documents
 
@@ -624,10 +683,14 @@ erDiagram
 | POST | `/auth/register` | – | Create a STUDENT account (optional `image`) |
 | POST | `/auth/login` | – | Log in and receive a JWT |
 | GET | `/auth/me` | User | Current user's profile |
-| PATCH | `/users/profile` | User | Change own name |
+| PATCH | `/users/profile` | User | Change own name and/or theme |
 | POST | `/users/profile/image` | User | Upload / replace profile photo |
 | DELETE | `/users/profile/image` | User | Remove profile photo |
-| GET | `/items?type=ALL\|LOST\|FOUND` | User | All **ACTIVE** reports, newest first |
+| GET | `/users/notifications` | User | Own notifications (newest first) + unread count |
+| PATCH | `/users/notifications/:id/read` | User | Mark one notification as read |
+| PATCH | `/users/notifications/read-all` | User | Mark all as read |
+| GET | `/items?…filters` | User | Browse: ACTIVE reports by default, with filters and sorting |
+| GET | `/items/stats` | User | Active lost, active found and recovered counts (Home) |
 | GET | `/items/my` | User | Own reports (any status) with `pendingClaimCount` |
 | GET | `/items/:id` | User | One report + viewer's own claim status |
 | POST | `/items` | User | Create a report (multipart, optional image) |
@@ -673,7 +736,13 @@ Body: `{ "email": "...", "password": "..." }`
 `200` → `data: { user }` · `401` if the token is missing, invalid or expired.
 
 #### `PATCH /api/users/profile`
-Body: `{ "name": "New Name" }` → `200 data: { user }`. Email and role cannot be changed here.
+Body: `{ "name": "New Name" }` and/or `{ "selectedTheme": "sunset" }` → `200 data: { user }`. `400` for an invalid name, an unknown theme or an empty body. Email and role cannot be changed here.
+
+#### `GET /api/users/notifications`
+`200` → `data: { notifications: [ { _id, type, title, message, relatedItem, relatedClaim, isRead, createdAt } ], unreadCount }`, newest first. Only the caller's own notifications.
+
+#### `PATCH /api/users/notifications/:id/read` · `PATCH /api/users/notifications/read-all`
+`200` marked as read · `404` if the notification does not belong to the caller · `400` invalid id.
 
 #### `POST /api/users/profile/image`
 `multipart/form-data` with `image` → `200 data: { user }` (the old Cloudinary photo is deleted) · `400` no file.
@@ -682,7 +751,22 @@ Body: `{ "name": "New Name" }` → `200 data: { user }`. Email and role cannot b
 `200 data: { user }` with `profileImage: null`.
 
 #### `GET /api/items`
-Query: optional `type` = `ALL` (default), `LOST` or `FOUND`.
+All query parameters are optional and can be combined. MongoDB does the filtering and sorting.
+
+| Parameter | Values |
+|---|---|
+| `type` | `ALL` (default), `LOST`, `FOUND` |
+| `category` | one of the 9 categories |
+| `location` | text contained in the location, case-insensitive |
+| `q` | text contained in the item name or category |
+| `reported` | `1d`, `7d`, `30d` (reported in the last day / week / month) |
+| `status` | `ACTIVE` (default) or `RECOVERED` |
+| `sort` | `newest` (default) or `oldest` |
+
+`400` for an unknown type, category, reported range, status or sort. User text in `location` and `q` is escaped before it is used in a regular expression.
+
+#### `GET /api/items/stats`
+`200` → `data: { stats: { activeLost, activeFound, recovered } }`.
 `200` → `data: { items: [ { _id, title, type, category, description, location, date, imageUrl, status, reportedBy: { _id, name, profileImage }, createdAt, updatedAt } ] }`. Never includes claims.
 
 #### `GET /api/items/my`
@@ -700,6 +784,17 @@ Query: optional `type` = `ALL` (default), `LOST` or `FOUND`.
 `myClaim` is `null` if the viewer has not claimed the item. `pendingClaimCount` is a number only when the viewer is the reporter. `400` invalid id · `404` not found.
 
 #### `POST /api/items`
+Optional field `submissionId` (8–64 letters, digits or dashes; the app sends a UUID) makes the request **idempotent**:
+
+| Situation | Response |
+|---|---|
+| First request with this id | `201` created |
+| Same id again, same details (a retry) | `200` with the already-saved report and `alreadySaved: true`; nothing new is created and the photo is not uploaded again |
+| Same id, different details | `409` with `code: "SUBMISSION_CONFLICT"` and the saved report |
+| Two requests with the same id at the same time | one `201`; the other gets MongoDB's duplicate-key error internally, deletes the photo it uploaded, and returns `200` with the same report |
+
+If saving fails after the photo was uploaded, the photo is deleted from Cloudinary.
+
 Content type: `multipart/form-data`
 
 | Field | Required | Notes |
@@ -722,6 +817,8 @@ Body: `{ "status": "RECOVERED" }`. For **LOST** items only: the owner got the it
 `200` deleted (Cloudinary image removed) · `403` not the reporter · `404` not found · `409` item is RECOVERED (kept as a record).
 
 #### `POST /api/items/:id/claims`
+Optional field `requestId` (the app sends a UUID per claim form). It is stored in the claim. A retry with the same `requestId` returns the saved claim with `200` and `alreadySaved: true`. The atomic update can never add it twice.
+
 Body: `{ "description": "Initials KS inside, has my library card" }` (10–1000 chars)
 
 | Status | Meaning |
@@ -753,7 +850,7 @@ Body: `{ "action": "APPROVE" }` or `{ "action": "REJECT", "reason": "optional, �
 `200` → `data: { claims: [ { ...claim, claimedBy: { name, email, profileImage }, item: { _id, title, imageUrl, status } } ] }`. Pending claims are listed first.
 
 #### `GET /api/admin/dashboard/stats`
-`200` → `data: { stats: { totalUsers, activeLost, activeFound, recovered } }` (counted by the database).
+`200` → `data: { stats: { totalUsers, activeLost, activeFound, recovered, reportsThisWeek, pendingClaims } }` (counted by the database). Deleting a report through `DELETE /api/admin/items/:id` also sends the reporter a `REPORT_REMOVED` notification.
 
 #### `GET /api/admin/items`
 `200` → all items with `reportedBy: { _id, name, email, profileImage }`.
@@ -937,6 +1034,13 @@ Fill in the **Result** column while testing on the real device. Do not pre-fill 
 | T21 | Admin delete | Admin deletes a report | Report disappears; statistics update | |
 | T22 | Admin cannot review | Admin opens an item with pending claims | No Approve / Reject or Claim buttons | |
 | T23 | Server unreachable | Stop the backend and pull to refresh | Error message with "Try again" button, no crash | |
+| T24 | Notifications | Student B claims Student A's found item; log in as A | Bell shows 1; Notifications lists "New claim on your found item"; tapping it opens the item and the count drops | |
+| T25 | Claim notifications | A approves B's claim (C also claimed) | B gets "Your claim was approved", C gets "Your claim was closed" | |
+| T26 | Browse filters | Browse → Filter → Lost + Electronics + Last 7 days → Apply | Only matching items; three chips shown; "Clear all" restores the full list | |
+| T27 | Claim tracker | B opens My Activity → My Claims before and after approval | Timeline moves from "Waiting for reporter" to "Approved" with times | |
+| T28 | Themes | Profile → Theme → Sunset; restart the app | Colours change immediately and are still Sunset after restart; status badges keep their colours | |
+| T29 | Guides | Home → How LostLink Works / Safety Guidelines (also from Profile → Help) | Both screens open and scroll | |
+| T30 | Admin moderation notice | Admin deletes a student's report | The student receives "Your report was removed" | |
 
 ### 11.4 Verification performed during development
 
@@ -1007,6 +1111,57 @@ The following was actually run during development:
   - the Android date picker;
   - the `mailto:` links (the emulator has no email app);
   - the "Open Settings" path after permanently denying a permission.
+
+**Feature round 3 (notifications, filters, tracker, guides, themes, full-screen campus photo).**
+
+- **Automated API test against Atlas (34 checks, all passed):**
+  - theme saving, validation and persistence;
+  - every Browse filter, combined filters and both sort orders, including regex-safe search and validation errors;
+  - Home stats;
+  - claim-received / approved / closed / rejected / report-removed notifications, with no duplicate after a second approval attempt;
+  - mark one / mark all read, and a student cannot mark another user's notification (404);
+  - `updatedAt` present for the tracker;
+  - admin stats and moderation;
+  - the claim rules still hold.
+- **On the emulator:**
+  - full-screen faded photo on Login (also with the keyboard open, where both fields stay visible and Email's "next" key moves to Password);
+  - Home with bell (2 unread), three stats and help cards;
+  - the Notifications screen and tapping through to the item;
+  - Browse filters (Lost + Electronics + Last 7 days gave the single expected item, with chips);
+  - My Claims tracker before and after approval;
+  - the bell updating by itself;
+  - Profile with campus photo, theme list and Help links;
+  - switching to Sunset re-coloured the app instantly, and it was still Sunset after restarting the app (and saved in MongoDB);
+  - How LostLink Works and Safety Guidelines;
+  - admin login lands on the Dashboard in the admin's own theme, with the moderation summary and the All Reports search and filters.
+- **Static checks:** backend and mobile typecheck, and mobile lint, all pass.
+- **Not verified:**
+  - Sign up with the new full-screen background (not opened in this round, but it is the same component as Login);
+  - Lavender / Ocean / Forest themes on a real device (only Sunset and VJTI Classic were viewed);
+  - a physical phone.
+
+**Reliability round (duplicate prevention, form locking, headers, spacing).**
+
+- **Automated API test against Atlas and Cloudinary (23 checks, all passed):**
+  - a retry with the same `submissionId` returns the same report;
+  - **8 simultaneous requests with the same id and a photo created exactly one report, and Cloudinary held exactly one new photo for it** (the others were cleaned up);
+  - the same id with changed details returns 409;
+  - ids are per user;
+  - old clients without an id still work;
+  - **6 simultaneous claim requests with the same `requestId` stored exactly one claim and one notification**;
+  - a new request id from the same student is still refused;
+  - rejection notes are saved, and approval still works.
+- **Database:** the partial unique index was built in Atlas over the existing reports without errors, and the database still has exactly two collections.
+- **On the emulator:**
+  - with the network turned off, submitting showed "Could not confirm your report" and kept the details and photo;
+  - after turning the network back on, submitting showed the locked form with the overlay. During it, Remove did nothing and Android Back showed "Please wait";
+  - the report was saved exactly once, with its photo and `submissionId`, and the form was cleared;
+  - the avatar (and bell) appear on Notifications, Item Details and Report Lost;
+  - the claim rejection note stays visible above the keyboard and Cancel / Confirm Reject are reachable;
+  - Profile's Log Out button sits clear of the navigation bar.
+- **Not verified:**
+  - a real timeout where the server saved the report but the phone lost the reply (covered by the API test, not reproduced on the device);
+  - a phone with 3-button navigation (the emulator uses gesture navigation; the spacing comes from the phone's real safe-area inset).
 
 ---
 

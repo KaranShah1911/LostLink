@@ -12,3 +12,6 @@ export function asString(value: unknown): string {
 export function isValidId(value: unknown): value is string {
   return typeof value === 'string' && isValidObjectId(value);
 }
+
+/** Shape of an idempotency key / request id sent by the app: 8–64 letters, digits or dashes (a UUID fits). */
+export const REQUEST_ID_PATTERN = /^[A-Za-z0-9-]{8,64}$/;

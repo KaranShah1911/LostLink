@@ -4,7 +4,10 @@ import type {
   AdminStats,
   Claim,
   Item,
+  AppNotification,
   ItemDetails,
+  ItemFilters,
+  ItemStats,
   ItemType,
   MyClaim,
   PickedImage,
@@ -67,6 +70,24 @@ export function getErrorMessage(error: unknown): string {
   return 'Something went wrong. Please try again.';
 }
 
+/**
+ * True when the request got no answer from the server (timeout, lost connection).
+ * In that case the server may or may not have done the work, so the app must not say it failed.
+ */
+export function isUncertainError(error: unknown): boolean {
+  return isAxiosError(error) && !error.response;
+}
+
+/** The error code the server sends when a submission id was already used with different details. */
+export function errorCode(error: unknown): string | undefined {
+  return isAxiosError(error) ? (error.response?.data as { code?: string } | undefined)?.code : undefined;
+}
+
+/** Data sent back with an error response (e.g. the existing report for SUBMISSION_CONFLICT). */
+export function errorData<T>(error: unknown): T | undefined {
+  return isAxiosError(error) ? (error.response?.data as { data?: T } | undefined)?.data : undefined;
+}
+
 /** Adds a picked image to a multipart form under the "image" field the backend expects. */
 function appendImage(form: FormData, image: PickedImage) {
   // React Native's FormData accepts a { uri, name, type } object for files. The TypeScript
@@ -120,6 +141,10 @@ export const profileApi = {
     const res = await api.patch('/users/profile', { name });
     return res.data.data.user;
   },
+  async updateTheme(selectedTheme: string): Promise<User> {
+    const res = await api.patch('/users/profile', { selectedTheme });
+    return res.data.data.user;
+  },
   async uploadPhoto(image: PickedImage): Promise<User> {
     const form = new FormData();
     appendImage(form, image);
@@ -140,12 +165,19 @@ export interface NewItem {
   location: string;
   date: string; // YYYY-MM-DD
   image?: PickedImage;
+  submissionId: string; // idempotency key, the same for every retry of one report
 }
 
 export const itemsApi = {
-  async list(type: 'ALL' | ItemType = 'ALL'): Promise<Item[]> {
-    const res = await api.get('/items', { params: type === 'ALL' ? {} : { type } });
+  /** Browse. Filtering and sorting are done by the backend; empty filters are left out. */
+  async list(filters: ItemFilters = {}): Promise<Item[]> {
+    const params = Object.fromEntries(Object.entries(filters).filter(([, value]) => value && value !== 'ALL'));
+    const res = await api.get('/items', { params });
     return res.data.data.items;
+  },
+  async stats(): Promise<ItemStats> {
+    const res = await api.get('/items/stats');
+    return res.data.data.stats;
   },
   async get(id: string): Promise<ItemDetails> {
     const res = await api.get(`/items/${id}`);
@@ -155,13 +187,14 @@ export const itemsApi = {
     const res = await api.get('/items/my');
     return res.data.data.items;
   },
-  async create({ image, ...fields }: NewItem): Promise<Item> {
+  /** Creates a report. alreadySaved is true when a retry found the report already saved. */
+  async create({ image, ...fields }: NewItem): Promise<{ item: Item; alreadySaved: boolean }> {
     // Sent as multipart/form-data so the optional image can travel with the fields.
     const form = new FormData();
     Object.entries(fields).forEach(([key, value]) => form.append(key, value));
     if (image) appendImage(form, image);
     const res = await api.post('/items', form, MULTIPART);
-    return res.data.data.item;
+    return { item: res.data.data.item, alreadySaved: !!res.data.data.alreadySaved };
   },
   async markRecovered(id: string): Promise<Item> {
     const res = await api.patch(`/items/${id}/status`, { status: 'RECOVERED' });
@@ -173,8 +206,10 @@ export const itemsApi = {
 };
 
 export const claimsApi = {
-  async submit(itemId: string, description: string): Promise<void> {
-    await api.post(`/items/${itemId}/claims`, { description });
+  /** Submits a claim. requestId is the idempotency key, the same for every retry of one claim. */
+  async submit(itemId: string, description: string, requestId: string): Promise<{ alreadySaved: boolean }> {
+    const res = await api.post(`/items/${itemId}/claims`, { description, requestId });
+    return { alreadySaved: !!res.data.data.alreadySaved };
   },
   async forItem(itemId: string): Promise<Claim[]> {
     const res = await api.get(`/items/${itemId}/claims`);
@@ -195,6 +230,19 @@ export const claimsApi = {
   async received(): Promise<ReceivedClaim[]> {
     const res = await api.get('/claims/received');
     return res.data.data.claims;
+  },
+};
+
+export const notificationsApi = {
+  async list(): Promise<{ notifications: AppNotification[]; unreadCount: number }> {
+    const res = await api.get('/users/notifications');
+    return res.data.data;
+  },
+  async markRead(id: string): Promise<void> {
+    await api.patch(`/users/notifications/${id}/read`);
+  },
+  async markAllRead(): Promise<void> {
+    await api.patch('/users/notifications/read-all');
   },
 };
 

@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LostLink – Project Report</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<section class="cover">
+  <img class="cover-logo" src="../assets/vjti_logo.jpg" alt="VJTI emblem">
+  <div class="cover-inst">Veermata Jijabai Technological Institute (VJTI), Mumbai</div>
+  <div class="cover-dept">Department of Computer Engineering</div>
+  <div class="cover-rule"></div>
+  <div class="cover-kind">Project Report</div>
+  <h1 class="cover-title">LostLink</h1>
+  <div class="cover-sub">Campus Lost &amp; Found Management Application</div>
+  <div class="cover-desc">An Android application built with React Native (Expo) and a Node.js / Express backend,<br>using MongoDB Atlas for data storage and Cloudinary for image storage</div>
+  <div class="cover-rule"></div>
+  <table class="cover-fields">
+    <tr><td>Submitted by</td><td>:</td><td>Karan P. Shah</td></tr>
+    <tr><td>Roll No.</td><td>:</td><td>231070058</td></tr>
+    <tr><td>Year and Branch</td><td>:</td><td>Final Year, Computer Engineering</td></tr>
+    <tr><td>Academic Year</td><td>:</td><td>2025-26</td></tr>
+  </table>
+</section>
+
+<!-- ============================== CONTENTS ============================== -->
+<section class="toc">
+  <h2 class="toc-title">Contents</h2>
+  <ol class="toc-list">
+    <li><a href="#s1">1. Introduction</a><span class="pg" data-for="s1"></span></li>
+    <li><a href="#s2">2. Problem Statement</a><span class="pg" data-for="s2"></span></li>
+    <li><a href="#s3">3. Proposed Solution</a><span class="pg" data-for="s3"></span></li>
+    <li><a href="#s4">4. Objectives</a><span class="pg" data-for="s4"></span></li>
+    <li><a href="#s5">5. Scope</a><span class="pg" data-for="s5"></span></li>
+    <li><a href="#s6">6. Requirements</a><span class="pg" data-for="s6"></span></li>
+    <li><a href="#s7">7. Use Case</a><span class="pg" data-for="s7"></span></li>
+    <li><a href="#s8">8. Functional Requirements</a><span class="pg" data-for="s8"></span></li>
+    <li><a href="#s9">9. Non-Functional Requirements</a><span class="pg" data-for="s9"></span></li>
+    <li><a href="#s10">10. Technology Stack</a><span class="pg" data-for="s10"></span></li>
+    <li><a href="#s11">11. System Architecture</a><span class="pg" data-for="s11"></span></li>
+    <li><a href="#s12">12. Database Design</a><span class="pg" data-for="s12"></span></li>
+    <li><a href="#s13">13. Core Logic</a><span class="pg" data-for="s13"></span></li>
+    <li><a href="#s14">14. Deployment Details</a><span class="pg" data-for="s14"></span></li>
+    <li><a href="#s15">15. Conclusion</a><span class="pg" data-for="s15"></span></li>
+    <li><a href="#s16">References</a><span class="pg" data-for="s16"></span></li>
+  </ol>
+  <h3 class="toc-sub">List of Figures</h3>
+  <ol class="toc-list figs">
+    <li><a href="#f1">Figure 1. UML use case diagram</a><span class="pg" data-for="f1"></span></li>
+    <li><a href="#f2">Figure 2. Overall system architecture</a><span class="pg" data-for="f2"></span></li>
+    <li><a href="#f3">Figure 3. Authentication and role-based access workflow</a><span class="pg" data-for="f3"></span></li>
+    <li><a href="#f4">Figure 4. Database design: the two collections</a><span class="pg" data-for="f4"></span></li>
+    <li><a href="#f5">Figure 5. Report submission workflow</a><span class="pg" data-for="f5"></span></li>
+    <li><a href="#f6">Figure 6. Claim submission and verification workflow</a><span class="pg" data-for="f6"></span></li>
+    <li><a href="#f7">Figure 7. Status transitions of items and claims</a><span class="pg" data-for="f7"></span></li>
+  </ol>
+</section>
+
+<!-- ============================== 1 ============================== -->
+<h1 id="s1" data-toc="1. Introduction" class="new-page">1. Introduction</h1>
+<p>Students lose things on a college campus every day: identity cards dropped near the gate, calculators left in classrooms, wallets forgotten in the canteen, earphones, keys and books. At VJTI these belongings are usually traced through word of mouth, notices on boards, the security desk or messages in class groups. These channels are scattered, short-lived and hard to search, so many items are never returned even when the person who found them wants to help.</p>
+<p><b>LostLink</b> is a mobile application that gives the campus one shared place for lost and found belongings. A student who loses something posts a <i>lost</i> report; a student who finds something posts a <i>found</i> report, optionally with a photograph. Other students browse and search these reports. When a student recognises a found item as their own, they submit an <i>ownership claim</i> describing details that only the real owner would know, and the student who found the item reviews the claim and approves or rejects it. An administrator moderates the reports and can inspect claims, but does not decide ownership.</p>
+<p>The application has two parts. The mobile application is written in TypeScript with React Native and Expo and runs on Android phones through Expo Go. It talks to a REST API written in TypeScript with Node.js and Express. Data is stored in a MongoDB Atlas database that uses only two collections, and photographs are stored in Cloudinary. The intended users are the students of the institute and one or more administrators appointed by the institute.</p>
+<p>This report describes the problem, the solution, the requirements, the design and the implementation of LostLink as it exists in the project source code at the time of writing.</p>
+
+<!-- ============================== 2 ============================== -->
+<h1 id="s2" data-toc="2. Problem Statement">2. Problem Statement</h1>
+<p>The informal way in which lost and found belongings are handled on campus creates the following problems:</p>
+<ol>
+  <li><b>Dependence on informal communication.</b> Information spreads through WhatsApp groups, notice boards and conversations. Messages are quickly buried under newer ones and only reach the people who happen to be in the same groups.</li>
+  <li><b>No central record.</b> There is no single place where a student can check whether their item has been found, or where a finder can announce what they found.</li>
+  <li><b>Difficulty locating belongings.</b> Without structured details such as category, location and date, it is hard to search for a specific item or to tell similar items apart.</li>
+  <li><b>Difficulty identifying the rightful owner.</b> When a valuable item such as a wallet or phone is found, the finder has no structured way to check that the person asking for it is the real owner. Items can be handed to the wrong person.</li>
+  <li><b>No tracking of claims.</b> When several people say an item is theirs, nobody keeps a record of who asked, what they said and what was decided. The claimant also has no way to see the progress of their request.</li>
+  <li><b>Difficulty managing many reports.</b> Old posts remain after the item is returned, duplicate posts appear, and nobody can remove misleading or inappropriate posts.</li>
+</ol>
+<p class="statement"><b>Problem statement:</b> design and develop a mobile application that gives the VJTI campus a single, organised platform for reporting and finding lost and found belongings, with a structured ownership-claim process that lets the finder verify the rightful owner, records the status of every claim, keeps reports accurate, and allows administrators to moderate the content.</p>
+
+<!-- ============================== 3 ============================== -->
+<h1 id="s3" data-toc="3. Proposed Solution">3. Proposed Solution</h1>
+<p>LostLink replaces the scattered channels with a mobile application backed by a central database. The workflow is described below from the point of view of each type of participant.</p>
+<h3>3.1 A student who lost an item</h3>
+<p>The student opens <i>Report → Report Lost Item</i> and enters the item name and category. The description and the last seen location are optional for lost items, because the owner may not remember them; the date can be picked from a calendar and a photograph can be attached. The report becomes visible to all students in Browse. The student can search the found reports, contact the person who posted a report through their registered email address, and mark their own lost report as recovered once they have the item back.</p>
+<h3>3.2 A student who found an item</h3>
+<p>The finder opens <i>Report Found Item</i> and enters the item name, category, description, the place where it was found and the date, with an optional photograph taken with the camera or chosen from the gallery. The app advises the finder to keep one private detail (for example, initials or contents) out of the description so that it can later be used to check claims.</p>
+<h3>3.3 A student claiming a found item</h3>
+<p>A student who recognises a found item taps <i>Claim This Item</i> and writes why the item belongs to them, mentioning identifying details that are not visible in the listing. The claim is stored with status <code>PENDING</code>. The item stays listed while claims are pending, and the claimant can follow the progress of the claim on a timeline in <i>My Activity → My Claims</i>.</p>
+<h3>3.4 The finder reviewing claims</h3>
+<p>The finder receives an in-app notification for every new claim and reviews the claims on the item page or in <i>My Activity → Claims Received</i>. Only the finder can approve or reject claims on their item. Approving one claim marks the item as <code>RECOVERED</code> and automatically closes every other pending claim; rejecting a claim (optionally with a reason) leaves the item open for other claims. The claimant is notified of the decision, and the two students arrange the hand-over by email.</p>
+<h3>3.5 The administrator</h3>
+<p>The administrator has a separate interface with a dashboard of statistics, a list of all reports and a read-only list of claims. The administrator can view and delete inappropriate or invalid reports (the reporter is notified) but cannot submit, approve or reject claims, so ownership decisions always remain with the finder.</p>
+
+<!-- ============================== 4 ============================== -->
+<h1 id="s4" data-toc="4. Objectives">4. Objectives</h1>
+<ol>
+  <li>Develop a centralised lost-and-found platform for the VJTI campus in the form of an Android mobile application.</li>
+  <li>Make reporting of lost and found items simple, with categories, location, date and an optional photograph from the camera or gallery.</li>
+  <li>Allow students to browse active listings and to search and filter them by type, category, location, date reported and status.</li>
+  <li>Provide a structured claim process in which the finder verifies ownership using private identifying details.</li>
+  <li>Guarantee that only one claim can be approved for an item, and record the status of every claim.</li>
+  <li>Keep students informed through in-app notifications and a claim progress tracker.</li>
+  <li>Provide separate, role-based interfaces for students and administrators, with authorisation enforced by the server.</li>
+  <li>Give administrators tools to view statistics and moderate listings.</li>
+  <li>Maintain organised and consistent records in a database with a deliberately simple design of two collections.</li>
+</ol>
+
+<!-- ============================== 5 ============================== -->
+<h1 id="s5" data-toc="5. Scope">5. Scope</h1>
+<h3>5.1 Intended users</h3>
+<p>Students of VJTI (role <code>STUDENT</code>), who register themselves in the app, and administrators (role <code>ADMIN</code>), whose accounts are created by a server-side seed script.</p>
+<h3>5.2 Implemented scope</h3>
+<table class="data">
+  <thead><tr><th style="width:24%">Area</th><th>What is implemented</th></tr></thead>
+  <tbody>
+    <tr><td>Student side</td><td>Registration with optional profile photo; login and automatic session restore; Home with statistics and recent reports; Browse with search and filters; Report Lost / Report Found; item details; claim submission; My Activity (My Reports, My Claims with progress tracker, Claims Received with approve/reject); notifications; profile editing (name, photo); choice of five colour themes; How LostLink Works and Safety Guidelines screens; contact through the phone's email app.</td></tr>
+    <tr><td>Administrator side</td><td>Dashboard (total users, active lost, active found, recovered, reports this week, pending claims, recovery rate, recent reports and claims); All Reports with search and filters, view and delete; read-only Claims list; profile and theme.</td></tr>
+    <tr><td>Backend</td><td>REST API with JWT authentication, role checks, input validation, idempotent report and claim creation, notification generation, statistics and moderation endpoints.</td></tr>
+    <tr><td>Database</td><td>MongoDB Atlas with two collections, <code>users</code> and <code>items</code>; claims and notifications are embedded arrays.</td></tr>
+    <tr><td>Image storage</td><td>Item photos and profile photos are uploaded by the backend to Cloudinary; only the image URL and public id are stored in MongoDB.</td></tr>
+  </tbody>
+</table>
+<h3>5.3 Current limitations</h3>
+<ul>
+  <li>The application has not been deployed to a public production server; it runs in a development setup (Section 14).</li>
+  <li>Notifications are in-app only. There are no push notifications; the unread count is refreshed every 30 seconds while the app is open.</li>
+  <li>There is no in-app chat. Students contact each other through their registered email address (a <code>mailto:</code> link).</li>
+  <li>There is no email verification, password reset or college-domain restriction during registration.</li>
+  <li>The app is designed and tested for Android; iOS has not been tested.</li>
+  <li>The repository does not contain an automated test suite. The API was tested with scripted requests and the app was tested manually on an Android emulator during development.</li>
+</ul>
+<h3>5.4 Possible future enhancements</h3>
+<p>Push notifications, in-app messaging, automatic matching of lost and found reports, email verification and password reset, pagination of long lists, an installable APK built with EAS Build, and deployment of the backend to a cloud host. None of these are part of the current implementation.</p>
+
+<!-- ============================== 6 ============================== -->
+<h1 id="s6" data-toc="6. Requirements">6. Requirements</h1>
+<p>The project does not document fixed hardware specifications. The values below are <b>recommended</b> requirements based on the tools the project uses.</p>
+<h3>6.1 Hardware requirements (recommended)</h3>
+<table class="data">
+  <thead><tr><th style="width:28%">Component</th><th>Development computer</th><th>User device</th></tr></thead>
+  <tbody>
+    <tr><td>Processor</td><td>64-bit quad-core processor</td><td>Any current Android phone</td></tr>
+    <tr><td>Memory</td><td>8 GB RAM (16 GB if the Android emulator is used)</td><td>3 GB RAM or more</td></tr>
+    <tr><td>Storage</td><td>10 GB free (Node modules, Android SDK, emulator image)</td><td>About 300 MB for Expo Go and cached data</td></tr>
+    <tr><td>Network</td><td>Wi-Fi or Ethernet on the same network as the phone during development</td><td>Wi-Fi or mobile data</td></tr>
+    <tr><td>Camera</td><td>–</td><td>Optional, for taking item and profile photos</td></tr>
+  </tbody>
+</table>
+<h3>6.2 Software requirements</h3>
+<table class="data">
+  <thead><tr><th style="width:28%">Software</th><th>Version / details</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Operating system</td><td>Ubuntu Linux was used; Windows or macOS also work</td><td>Development</td></tr>
+    <tr><td>Node.js and npm</td><td>Node.js 20 or newer (developed with Node.js 24, npm 11)</td><td>Running the backend and the Expo tools</td></tr>
+    <tr><td>Android</td><td>Android phone with the Expo Go app, or the Android Studio emulator</td><td>Running the mobile application</td></tr>
+    <tr><td>MongoDB Atlas</td><td>Free (M0) cluster is sufficient</td><td>Cloud database</td></tr>
+    <tr><td>Cloudinary</td><td>Free plan is sufficient</td><td>Image storage</td></tr>
+  </tbody>
+</table>
+<h3>6.3 Development tools</h3>
+<table class="data">
+  <thead><tr><th style="width:28%">Tool</th><th>Use in the project</th></tr></thead>
+  <tbody>
+    <tr><td>Visual Studio Code</td><td>Source code editor (any editor can be used)</td></tr>
+    <tr><td>TypeScript compiler</td><td><code>tsc --noEmit</code> type checks for both the app and the backend</td></tr>
+    <tr><td>ESLint (eslint-config-expo)</td><td>Linting of the mobile app (<code>npm run lint</code>)</td></tr>
+    <tr><td>Expo CLI and expo-doctor</td><td>Starting the development server and checking dependency versions</td></tr>
+    <tr><td>tsx</td><td>Running the TypeScript backend with automatic reload during development</td></tr>
+    <tr><td>Android Studio emulator</td><td>Testing on a virtual Android device</td></tr>
+    <tr><td>Postman or curl</td><td>Manual testing of API endpoints</td></tr>
+    <tr><td>MongoDB Atlas web console</td><td>Inspecting collections and indexes</td></tr>
+  </tbody>
+</table>
+<h3>6.4 Runtime requirements</h3>
+<ul>
+  <li>The backend needs network access to MongoDB Atlas and Cloudinary and a <code>.env</code> file with the connection string, the JWT secret, the Cloudinary credentials and the administrator details (Section 14).</li>
+  <li>The phone must be able to reach the backend over the network; the backend listens on <code>0.0.0.0</code>, port 5000 by default.</li>
+  <li>Camera and photo access are requested by Android only when the user chooses to add a photo.</li>
+</ul>
+
+<!-- ============================== 7 ============================== -->
+<h1 id="s7" data-toc="7. Use Case">7. Use Case</h1>
+<p>Figure 1 shows the use cases of LostLink. The actors and use cases were derived from the screens, route guards and API endpoints in the source code; they are explained after the figure.</p>
+<section class="landscape figure-page">
+  <figure id="f1" data-toc="Figure 1. UML use case diagram">
+    <div class="fig-body"><!--FIG:use_case--></div>
+    <figcaption>Figure 1. UML use case diagram of LostLink</figcaption>
+  </figure>
+</section>
+
+<p>The actors in Figure 1 are:</p>
+<ul>
+  <li><b>Student</b> – a registered user with the role <code>STUDENT</code>. Students report items, browse, claim found items, review claims on items they found and manage their own reports.</li>
+  <li><b>Administrator</b> – a registered user with the role <code>ADMIN</code>, created by the seed script. Administrators view statistics, view and filter all reports, remove inappropriate reports and inspect claims in read-only form.</li>
+  <li><b>Registered user</b> – an abstract actor representing what both roles share: logging in and out, viewing item details, managing the profile and theme, and reading the help guides. Student and Administrator are specialisations of it (the hollow-triangle generalisation arrows).</li>
+</ul>
+<p>The «include» relationship shows that attaching a photo (from the camera or the gallery) is part of reporting a lost or a found item. "Approve / reject claims" is a Student use case because only the student who reported a found item can decide its claims; the Administrator is deliberately not connected to it.</p>
+
+
+<!-- ============================== 8 ============================== -->
+<h1 id="s8" data-toc="8. Functional Requirements">8. Functional Requirements</h1>
+<table class="data fr">
+  <thead><tr><th style="width:9%">ID</th><th style="width:22%">Requirement</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>FR-01</td><td>User registration</td><td>A student registers with name, email, password and password confirmation, and may add a profile photo. Email addresses are unique. Every self-registered account receives the role <code>STUDENT</code>; administrator accounts can only be created by the seed script.</td></tr>
+    <tr><td>FR-02</td><td>Authentication and session</td><td>A user logs in with email and password and receives a JSON Web Token valid for 7 days. The app stores it in Expo Secure Store, restores the session when reopened and logs the user out when the server reports an invalid or expired token.</td></tr>
+    <tr><td>FR-03</td><td>Role-based access</td><td>Students and administrators see different tab interfaces. Screens that do not belong to a role cannot be opened by that role, and the server rejects administrator requests from students with HTTP 403.</td></tr>
+    <tr><td>FR-04</td><td>Home dashboard</td><td>The student Home shows a welcome message, counts of active lost, active found and recovered items, shortcuts to report lost and found items, links to the help guides and the five most recent active reports.</td></tr>
+    <tr><td>FR-05</td><td>Browse and search</td><td>Students see active reports, newest first, and can search by item name or category.</td></tr>
+    <tr><td>FR-06</td><td>Advanced filters</td><td>A filter panel combines item type, category, location text, date reported (24 hours, 7 days, 30 days), status (active or recovered) and sort order (newest or oldest). Filtering is performed by the database.</td></tr>
+    <tr><td>FR-07</td><td>Lost item reporting</td><td>A student reports a lost item with name, category, optional description, optional last seen location, date and optional photo.</td></tr>
+    <tr><td>FR-08</td><td>Found item reporting</td><td>A student reports a found item with name, category, description, found location, date and optional photo.</td></tr>
+    <tr><td>FR-09</td><td>Duplicate-safe submission</td><td>While a report or claim is being sent the form is locked; a repeated request with the same idempotency key never creates a second report or claim.</td></tr>
+    <tr><td>FR-10</td><td>Item details and contact</td><td>Any logged-in user can open an item's details. Other students can contact the reporter through an email draft opened with a <code>mailto:</code> link.</td></tr>
+    <tr><td>FR-11</td><td>Claim submission</td><td>A student can claim an active found item that they did not report, once per item, by describing identifying details.</td></tr>
+    <tr><td>FR-12</td><td>Claim verification</td><td>Only the reporter of a found item can view its claims and approve or reject them. Approving one claim marks the item recovered and rejects all other pending claims in the same operation.</td></tr>
+    <tr><td>FR-13</td><td>Claim progress tracking</td><td>A claimant sees a timeline (submitted, waiting for reporter, approved or rejected) with dates and the rejection reason if one was given.</td></tr>
+    <tr><td>FR-14</td><td>My Activity</td><td>A student sees their own reports (and can mark a lost item recovered or delete an active report), their submitted claims and the claims received on their found items.</td></tr>
+    <tr><td>FR-15</td><td>Notifications</td><td>The server records a notification when a claim is received, approved, rejected or closed, and when an administrator removes a report. Students see an unread count, a list of notifications, and can mark them read.</td></tr>
+    <tr><td>FR-16</td><td>Profile and theme</td><td>A user can change their name, add, change or remove a profile photo, and choose one of five colour themes, which is saved to the account.</td></tr>
+    <tr><td>FR-17</td><td>Administrative moderation</td><td>An administrator sees statistics and all reports, can delete any report and can inspect claims, but cannot approve or reject them.</td></tr>
+    <tr><td>FR-18</td><td>Help information</td><td>The app includes a How LostLink Works guide and Safety Guidelines.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 9 ============================== -->
+<h1 id="s9" data-toc="9. Non-Functional Requirements">9. Non-Functional Requirements</h1>
+<p>No formal performance benchmarks or security audits were carried out. This section therefore describes the design decisions taken to meet each requirement.</p>
+<table class="data">
+  <thead><tr><th style="width:20%">Requirement</th><th>How it is addressed</th></tr></thead>
+  <tbody>
+    <tr><td>Usability</td><td>Separate tab bars for each role, a consistent colour scheme with fixed status colours (red for lost, green for found and approved, amber for pending), category icons, empty-state and error messages with a retry button, and forms that keep the field being edited above the keyboard.</td></tr>
+    <tr><td>Performance</td><td>Filtering, sorting and counting are done by MongoDB queries supported by indexes on status, type, creation date and reporter. Photos are compressed on the phone (quality 0.7) and limited to 5 MB. Lists reload quietly when a screen regains focus.</td></tr>
+    <tr><td>Reliability</td><td>Report and claim creation are idempotent, so a retry after a timeout does not create duplicates. Claim approval is a single conditional update, so two approvals cannot succeed for the same item. If saving a report fails after a photo was uploaded, the photo is deleted.</td></tr>
+    <tr><td>Security</td><td>Passwords are hashed with bcrypt (10 salt rounds) and never returned by the API. Every protected route verifies a signed JWT; administrator routes check the role on the server. Users can only modify their own reports, profile and notifications. Private claim descriptions are excluded from public item responses. Secrets are kept in a git-ignored <code>.env</code> file, and error responses do not include stack traces.</td></tr>
+    <tr><td>Data integrity</td><td>Mongoose schemas enforce required fields, lengths and allowed values (enums). Unique indexes protect email addresses and report submission ids. Status changes are made with conditional updates that check the current state.</td></tr>
+    <tr><td>Maintainability</td><td>TypeScript on both sides, a small number of files with clear responsibilities, shared UI components, one central theme definition and comments explaining the important decisions.</td></tr>
+    <tr><td>Scalability considerations</td><td>The API is stateless (JWT), so more server instances could be added. Embedded notifications are capped at 50 per user. Lists are not yet paginated, which would be needed for a very large number of reports.</td></tr>
+    <tr><td>Compatibility</td><td>Built on Expo SDK 58 and runs in Expo Go on Android without native modules outside the Expo SDK.</td></tr>
+    <tr><td>Responsiveness</td><td>Layouts use flexible widths and the device's safe-area insets so that content is not hidden behind the status bar, navigation bar or keyboard on different screen sizes.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 10 ============================== -->
+<h1 id="s10" data-toc="10. Technology Stack">10. Technology Stack</h1>
+<p>The table lists the libraries actually declared in the project's <code>package.json</code> files, with the declared versions.</p>
+<table class="data">
+  <thead><tr><th style="width:26%">Technology (version)</th><th style="width:13%">Layer</th><th>Role in LostLink</th></tr></thead>
+  <tbody>
+    <tr><td>TypeScript (6.0 app, 7.0 backend)</td><td>Both</td><td>Static types for all application and server code.</td></tr>
+    <tr><td>React Native 0.88 and React 19.3</td><td>Mobile</td><td>User interface components rendered as native Android views.</td></tr>
+    <tr><td>Expo SDK 58</td><td>Mobile</td><td>Development tooling, Expo Go runtime and the Expo modules listed below.</td></tr>
+    <tr><td>Expo Router 58</td><td>Mobile</td><td>File-based navigation: stack and tab navigators, and role-based route guards (<code>Stack.Protected</code>).</td></tr>
+    <tr><td>Axios 1.21</td><td>Mobile</td><td>HTTP client; adds the JWT to every request and handles timeouts and errors.</td></tr>
+    <tr><td>Expo Secure Store</td><td>Mobile</td><td>Encrypted storage of the JWT, the user object and the chosen theme on the phone.</td></tr>
+    <tr><td>Expo Image Picker</td><td>Mobile</td><td>Taking a photo with the camera or choosing one from the gallery, with cropping.</td></tr>
+    <tr><td>@react-native-community/datetimepicker 9.2</td><td>Mobile</td><td>Native date picker on the report forms.</td></tr>
+    <tr><td>react-native-safe-area-context</td><td>Mobile</td><td>Padding for the status bar and navigation bar on edge-to-edge Android screens.</td></tr>
+    <tr><td>@expo/vector-icons</td><td>Mobile</td><td>Ionicons and Material Community icons (including category icons).</td></tr>
+    <tr><td>Node.js (20 or newer)</td><td>Backend</td><td>JavaScript runtime for the server.</td></tr>
+    <tr><td>Express 5.3</td><td>Backend</td><td>REST API routing, middleware and a central error handler.</td></tr>
+    <tr><td>Mongoose 9.12</td><td>Backend</td><td>Schemas, validation, indexes and queries for MongoDB.</td></tr>
+    <tr><td>MongoDB Atlas</td><td>Database</td><td>Cloud-hosted database holding the <code>users</code> and <code>items</code> collections.</td></tr>
+    <tr><td>jsonwebtoken 9</td><td>Backend</td><td>Signing and verifying login tokens.</td></tr>
+    <tr><td>bcryptjs 3</td><td>Backend</td><td>Hashing and checking passwords.</td></tr>
+    <tr><td>Multer 2.5</td><td>Backend</td><td>Reading multipart uploads into memory with file type and size limits.</td></tr>
+    <tr><td>Cloudinary SDK 2.11</td><td>Backend / cloud</td><td>Uploading and deleting item and profile photos.</td></tr>
+    <tr><td>cors, dotenv</td><td>Backend</td><td>Allowing requests from the app and loading configuration from <code>.env</code>.</td></tr>
+    <tr><td>tsx</td><td>Backend (dev)</td><td>Running the TypeScript server with automatic reload during development.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 11 ============================== -->
+<h1 id="s11" data-toc="11. System Architecture">11. System Architecture</h1>
+<p>LostLink follows a three-tier client–server architecture (Figure 2). The mobile application never connects to the database or to Cloudinary's upload API directly: every operation goes through the backend, which authenticates the user, validates the request and enforces the business rules.</p>
+<h3>11.1 Mobile application</h3>
+<p>Screens are files in <code>mobile/src/app</code>; Expo Router turns the folder structure into navigation. The root layout wraps the app in three providers: <code>AuthProvider</code> (current user and token), <code>ThemeProvider</code> (selected colour theme) and <code>NotificationsProvider</code> (unread count). It then declares the screens inside <code>Stack.Protected</code> groups whose guards depend on the user's role: logged-out users only have Login and Register, students have the <code>(student)</code> tab group and the report and claim forms, and administrators have the <code>(admin)</code> tab group. A screen whose guard is false does not exist for that user, and anyone who reaches it is redirected to an index route that sends them to the correct starting screen. All network calls go through one Axios client in <code>lib/api.ts</code>, which attaches the token, sets timeouts (20 s, or 60 s for uploads) and logs the user out on an HTTP 401 response.</p>
+<h3>11.2 Backend API</h3>
+<p>The Express application (<code>backend/app.ts</code>) enables CORS and a JSON body parser limited to 100 KB, mounts five routers and ends with a central error handler that converts validation, upload and duplicate-key errors into short JSON messages without stack traces. Routes that need a logged-in user run <code>requireAuth</code>, which verifies the token and loads the user from the database; administrator routes also run <code>requireAdmin</code>. Image uploads pass through Multer, which keeps the file in memory and accepts only JPG, PNG, WEBP and HEIC files up to 5 MB.</p>
+<table class="data">
+  <thead><tr><th style="width:22%">Router</th><th>Endpoints (all under <code>/api</code>)</th></tr></thead>
+  <tbody>
+    <tr><td>Health</td><td><code>GET /health</code></td></tr>
+    <tr><td>Authentication</td><td><code>POST /auth/register</code>, <code>POST /auth/login</code>, <code>GET /auth/me</code></td></tr>
+    <tr><td>Users (profile)</td><td><code>PATCH /users/profile</code>, <code>POST</code> and <code>DELETE /users/profile/image</code>, <code>GET /users/notifications</code>, <code>PATCH /users/notifications/:id/read</code>, <code>PATCH /users/notifications/read-all</code></td></tr>
+    <tr><td>Items</td><td><code>GET /items</code> (with filters), <code>GET /items/stats</code>, <code>GET /items/my</code>, <code>GET /items/:id</code>, <code>POST /items</code>, <code>PATCH /items/:id/status</code>, <code>DELETE /items/:id</code></td></tr>
+    <tr><td>Claims</td><td><code>POST /items/:id/claims</code>, <code>GET /items/:id/claims</code>, <code>PATCH /items/:id/claims/:claimId</code>, <code>GET /claims/my</code>, <code>GET /claims/received</code></td></tr>
+    <tr><td>Admin</td><td><code>GET /admin/dashboard/stats</code>, <code>GET /admin/items</code>, <code>DELETE /admin/items/:id</code>, <code>GET /admin/claims</code></td></tr>
+  </tbody>
+</table>
+<p>Every response has the same shape: <code>{ success, message, data }</code> for success and <code>{ success: false, message }</code> for errors, with appropriate HTTP status codes (400 invalid input, 401 not logged in, 403 not allowed, 404 not found, 409 conflict).</p>
+
+<h3>11.3 Data and image storage</h3>
+<p>Mongoose models (<code>User</code> and <code>Item</code>) read and write the two collections in MongoDB Atlas. Photographs are streamed from the server's memory to Cloudinary (folders <code>lostlink/items</code> and <code>lostlink/profiles</code>); the returned secure URL and public id are stored in MongoDB, and the app loads the image directly from the Cloudinary URL. Cloudinary credentials exist only in the backend's environment.</p>
+<h3>11.4 Authentication and role-based access</h3>
+<p>Figure 3 shows how a user reaches the correct interface. When the app opens, a saved token is checked with <code>GET /api/auth/me</code>; until this check finishes the app shows a loading screen, so the wrong interface is never displayed. The role in the server's reply decides which tab group is shown. Protection exists at two levels: the app hides and blocks screens by role, and the server independently rejects requests that the user is not allowed to make.</p>
+
+
+<section class="landscape figure-page">
+  <figure id="f2" data-toc="Figure 2. Overall system architecture">
+    <div class="fig-body"><!--FIG:architecture--></div>
+    <figcaption>Figure 2. Overall system architecture. Solid arrows show requests; dashed arrows show supporting data used by the screens and the API client.</figcaption>
+  </figure>
+</section>
+
+<figure id="f3" data-toc="Figure 3. Authentication and role-based access workflow" class="inline-figure">
+  <div class="fig-body medium"><!--FIG:auth_flow--></div>
+  <figcaption>Figure 3. Authentication and role-based access workflow</figcaption>
+</figure>
+
+<!-- ============================== 12 ============================== -->
+<h1 id="s12" data-toc="12. Database Design">12. Database Design</h1>
+<p>The database (named <code>LostLink</code> in MongoDB Atlas) contains <b>exactly two collections: <code>users</code> and <code>items</code></b>. Data that always belongs to one parent document is embedded in it instead of being stored in a separate collection:</p>
+<ul>
+  <li><b>Claims</b> are an embedded array inside the item they are made on. A claim never exists without its item, the finder always reviews claims item by item, and embedding allows one atomic update to approve a claim, reject the others and change the item's status together.</li>
+  <li><b>Notifications</b> are an embedded array inside the user they are addressed to, limited to the newest 50.</li>
+</ul>
+<p>Relationships between documents use ObjectId references: an item's <code>reportedBy</code> and each claim's <code>claimedBy</code> point to a user, and a notification's <code>relatedItem</code> points to an item (Figure 4).</p>
+
+<h3>12.1 users collection</h3>
+<table class="data compact">
+  <thead><tr><th style="width:26%">Field</th><th style="width:20%">Type</th><th>Purpose and validation</th></tr></thead>
+  <tbody>
+    <tr><td>_id</td><td>ObjectId</td><td>Primary key</td></tr>
+    <tr><td>name</td><td>String</td><td>Required, 2–60 characters</td></tr>
+    <tr><td>email</td><td>String</td><td>Required, unique index, stored in lowercase</td></tr>
+    <tr><td>password</td><td>String</td><td>bcrypt hash; <code>select: false</code>, never returned</td></tr>
+    <tr><td>role</td><td>String</td><td><code>STUDENT</code> (default) or <code>ADMIN</code></td></tr>
+    <tr><td>profileImage, profileImagePublicId</td><td>String</td><td>Optional Cloudinary URL and id of the profile photo</td></tr>
+    <tr><td>selectedTheme</td><td>String</td><td><code>vjti</code> (default), <code>ocean</code>, <code>sunset</code>, <code>lavender</code> or <code>forest</code></td></tr>
+    <tr><td>notifications</td><td>Array (embedded)</td><td>See 12.3; <code>select: false</code></td></tr>
+    <tr><td>createdAt, updatedAt</td><td>Date</td><td>Automatic timestamps</td></tr>
+  </tbody>
+</table>
+
+<h3>12.2 items collection</h3>
+<table class="data compact">
+  <thead><tr><th style="width:26%">Field</th><th style="width:20%">Type</th><th>Purpose and validation</th></tr></thead>
+  <tbody>
+    <tr><td>_id</td><td>ObjectId</td><td>Primary key</td></tr>
+    <tr><td>title</td><td>String</td><td>Required, 2–80 characters</td></tr>
+    <tr><td>type</td><td>String</td><td><code>LOST</code> or <code>FOUND</code></td></tr>
+    <tr><td>category</td><td>String</td><td>One of: Electronics, Identity Cards, Wallets, Bags, Books, Clothing, Accessories, Keys, Other</td></tr>
+    <tr><td>description</td><td>String</td><td>Up to 1000 characters; required (at least 5) for FOUND items, optional for LOST items</td></tr>
+    <tr><td>location</td><td>String</td><td>Up to 120 characters; required for FOUND items, optional for LOST items</td></tr>
+    <tr><td>date</td><td>Date</td><td>Date lost or found; may not be in the future</td></tr>
+    <tr><td>imageUrl, imagePublicId</td><td>String</td><td>Optional Cloudinary URL and id of the item photo</td></tr>
+    <tr><td>reportedBy</td><td>ObjectId → users</td><td>Required; the student who created the report</td></tr>
+    <tr><td>status</td><td>String</td><td><code>ACTIVE</code> (default) or <code>RECOVERED</code></td></tr>
+    <tr><td>claims</td><td>Array (embedded)</td><td>See 12.3; <code>select: false</code> so it never appears in public listings</td></tr>
+    <tr><td>submissionId</td><td>String</td><td>Optional idempotency key sent by the app, one per report form</td></tr>
+    <tr><td>submissionHash</td><td>String</td><td>Fingerprint of the submitted details; <code>select: false</code></td></tr>
+    <tr><td>createdAt, updatedAt</td><td>Date</td><td>Automatic timestamps</td></tr>
+  </tbody>
+</table>
+
+<h3>12.3 Embedded documents</h3>
+<table class="data compact">
+  <thead><tr><th style="width:22%">Embedded in</th><th style="width:28%">Field</th><th>Type and purpose</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="6">items.claims[ ]</td><td>_id</td><td>ObjectId of the claim</td></tr>
+    <tr><td>claimedBy</td><td>ObjectId → users; the claimant</td></tr>
+    <tr><td>description</td><td>String, 10–1000 characters; private identifying details</td></tr>
+    <tr><td>status</td><td><code>PENDING</code> (default), <code>APPROVED</code> or <code>REJECTED</code></td></tr>
+    <tr><td>rejectionReason, requestId</td><td>Optional strings: reason given by the finder; idempotency key of the claim request</td></tr>
+    <tr><td>createdAt, updatedAt</td><td>Timestamps, used by the claim progress tracker</td></tr>
+    <tr><td rowspan="5">users.notifications[ ]</td><td>_id</td><td>ObjectId of the notification</td></tr>
+    <tr><td>type</td><td><code>CLAIM_RECEIVED</code>, <code>CLAIM_APPROVED</code>, <code>CLAIM_REJECTED</code>, <code>CLAIM_CLOSED</code> or <code>REPORT_REMOVED</code></td></tr>
+    <tr><td>title, message</td><td>Short texts shown in the app</td></tr>
+    <tr><td>relatedItem, relatedClaim</td><td>Optional ObjectIds used to open the right item when tapped</td></tr>
+    <tr><td>isRead, createdAt</td><td>Read state and time of the event</td></tr>
+  </tbody>
+</table>
+
+<h3>12.4 Indexes</h3>
+<table class="data compact">
+  <thead><tr><th style="width:42%">Index</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>users: <code>{ email: 1 }</code> unique</td><td>One account per email address</td></tr>
+    <tr><td>items: <code>{ status: 1, type: 1, createdAt: -1 }</code></td><td>Browse and Home: active items by type, newest first</td></tr>
+    <tr><td>items: <code>{ reportedBy: 1, createdAt: -1 }</code></td><td>My Reports and Claims Received</td></tr>
+    <tr><td>items: <code>{ 'claims.claimedBy': 1 }</code></td><td>My Claims</td></tr>
+    <tr><td>items: <code>{ reportedBy: 1, submissionId: 1 }</code> unique, partial</td><td>At most one report per submission id. The partial filter (<code>submissionId</code> is a string) excludes older reports that have no submission id.</td></tr>
+  </tbody>
+</table>
+
+<section class="landscape figure-page">
+  <figure id="f4" data-toc="Figure 4. Database design: the two collections">
+    <div class="fig-body"><!--FIG:database--></div>
+    <figcaption>Figure 4. Database design: the two collections of the MongoDB database, users and items. The shaded tables (notifications and claims) are arrays embedded inside the documents, not separate collections. Arrows show ObjectId references.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================== 13 ============================== -->
+<h1 id="s13" data-toc="13. Core Logic">13. Core Logic</h1>
+<h3>13.1 User authentication</h3>
+<ol>
+  <li><b>Registration</b> (<code>POST /api/auth/register</code>): the server checks the name length, email format, password length (at least 6) and that the confirmation matches, and rejects an email that is already registered (409). It hashes the password with <code>bcrypt.hash(password, 10)</code>, uploads the optional profile photo, and creates the user with the role <code>STUDENT</code>. The role is never read from the request, so nobody can register as an administrator.</li>
+  <li><b>Login</b> (<code>POST /api/auth/login</code>): the server finds the user by email, compares the password with <code>bcrypt.compare</code> and returns the same message ("Invalid email or password") whether the email or the password is wrong.</li>
+  <li><b>Token generation</b>: on success the server signs a JWT containing the user id with the secret from <code>.env</code>, valid for 7 days, and returns it with the public user fields.</li>
+  <li><b>Authorised requests</b>: the app sends <code>Authorization: Bearer &lt;token&gt;</code>. <code>requireAuth</code> verifies the signature and expiry, loads the user and attaches it to the request; <code>requireAdmin</code> additionally requires the role <code>ADMIN</code>.</li>
+  <li><b>Administrator accounts</b> are created or updated by <code>npm run seed:admin</code>, which reads the administrator's name, email and password from <code>.env</code> and never creates a duplicate.</li>
+</ol>
+
+<h3>13.2 Reporting lost and found items</h3>
+<p>The report form validates the fields on the phone and then sends a multipart request to <code>POST /api/items</code> containing the fields, the optional photo and a <code>submissionId</code>. The server validates the fields again (Figure 5). Because a mobile connection can drop after the server has saved a report but before the phone receives the answer, report creation is <b>idempotent</b>:</p>
+<ol>
+  <li>The form creates one random <code>submissionId</code> when it opens and reuses it for every retry. A new id is created only after the server confirms success.</li>
+  <li>While the request is in progress the whole form is locked by an overlay: fields, category, date and photo buttons are disabled and the user cannot leave the screen.</li>
+  <li>If a report with the same reporter and <code>submissionId</code> already exists, the server returns that report with HTTP 200 instead of creating another one. If the details differ from the saved ones, it returns 409 so the change is not silently lost.</li>
+  <li>The unique partial index on <code>(reportedBy, submissionId)</code> is the actual guarantee: if two identical requests arrive at the same moment, the second insert fails with a duplicate-key error, deletes the photo it had uploaded and returns the first report.</li>
+  <li>If the app receives no reply, it tells the user that the result could not be confirmed, keeps the data and the photo, and explains that submitting again is safe.</li>
+</ol>
+<p>New reports have the status <code>ACTIVE</code> and appear in Browse and on Home. The owner of a lost item can later mark it <code>RECOVERED</code>; students can delete their own active reports, while recovered reports are kept as history.</p>
+
+<figure id="f5" data-toc="Figure 5. Report submission workflow" class="inline-figure">
+  <div class="fig-body large"><!--FIG:report_flow--></div>
+  <figcaption>Figure 5. Report submission workflow, including duplicate prevention and photo clean-up</figcaption>
+</figure>
+
+<h3>13.3 Browsing and searching</h3>
+<p><code>GET /api/items</code> builds a MongoDB filter from optional query parameters: <code>type</code>, <code>category</code>, <code>location</code> (case-insensitive "contains"), <code>q</code> (matches the item name or category), <code>reported</code> (<code>1d</code>, <code>7d</code> or <code>30d</code> before now), <code>status</code> (default <code>ACTIVE</code>) and <code>sort</code> (<code>newest</code> or <code>oldest</code>). Text typed by the user is escaped before it is used in a regular expression, and unknown values are rejected with 400. The Browse screen sends the search text 400 ms after the user stops typing and shows active filters as removable chips. Claims are never included in these responses.</p>
+
+<h3>13.4 Claim submission</h3>
+<p>A claim is added with one conditional <code>findOneAndUpdate</code> and <code>$push</code> (Figure 6). The update succeeds only if the item exists, is of type <code>FOUND</code>, has status <code>ACTIVE</code>, was not reported by the claimant, does not already have a claim from this student, and does not already contain the same <code>requestId</code>. Because all these conditions are checked inside a single atomic database operation, two simultaneous requests cannot both add a claim. When the update matches nothing, the server reads the item once more to return a precise reason (for example "This item has already been recovered"), or returns the saved claim if the request is a retry. After a successful claim the reporter receives a <code>CLAIM_RECEIVED</code> notification.</p>
+
+<h3>13.5 Claim verification</h3>
+<p>Only the reporter of the item can view its claims (<code>GET /api/items/:id/claims</code>) and decide them (<code>PATCH /api/items/:id/claims/:claimId</code>). The decision is a single conditional update whose filter requires that the item belongs to the requester, the item is <code>ACTIVE</code> and the chosen claim is <code>PENDING</code>:</p>
+<ul>
+  <li><b>Approve:</b> the same update sets the item to <code>RECOVERED</code>, the chosen claim to <code>APPROVED</code> and every other pending claim to <code>REJECTED</code> with the reason "The item has already been returned to another claimant." (using MongoDB <code>arrayFilters</code>). Once the item is <code>RECOVERED</code>, no further approval can match the filter, so two claims can never be approved for the same item.</li>
+  <li><b>Reject:</b> only the chosen claim becomes <code>REJECTED</code>, with the optional reason; the item stays <code>ACTIVE</code> and other students may still claim it.</li>
+</ul>
+<p>Figure 7 summarises the resulting status transitions. The claim progress tracker in the app is drawn only from the stored status and timestamps, so it always reflects the database.</p>
+
+<section class="landscape figure-page">
+  <figure id="f6" data-toc="Figure 6. Claim submission and verification workflow">
+    <div class="fig-body"><!--FIG:claim_flow--></div>
+    <figcaption>Figure 6. Claim submission and verification workflow. Dashed arrows show the notifications created by each step.</figcaption>
+  </figure>
+</section>
+
+<figure id="f7" data-toc="Figure 7. Status transitions of items and claims" class="inline-figure">
+  <div class="fig-body small"><!--FIG:claim_states--></div>
+  <figcaption>Figure 7. Status transitions of items and claims</figcaption>
+</figure>
+
+<h3>13.6 Notifications</h3>
+<p>Notifications are created only by the backend, immediately after the event they describe, through a helper function <code>notify()</code>. It appends the notification to the user's embedded array with <code>$push</code> and <code>$slice: -50</code>, so only the newest 50 are kept. The events are: a claim received (to the finder), a claim approved, rejected or closed by another approval (to the claimant), and a report removed by an administrator (to the reporter). Because the database updates behind these events can succeed only once, the same notification is never created twice. The app fetches <code>GET /api/users/notifications</code> to show the list and unread count; the count is refreshed every 30 seconds and when the app returns to the foreground. Tapping a notification marks it as read and opens the related item.</p>
+
+<h3>13.7 Image upload</h3>
+<ol>
+  <li>The user chooses <i>Camera</i> or <i>Gallery</i> in a bottom sheet. The camera requires permission, which is requested at that moment; if it is refused, the app explains how to enable it.</li>
+  <li>The picked image is cropped (square for profile photos), compressed to quality 0.7 and checked against the 5 MB limit on the phone.</li>
+  <li>The image is sent to the backend as part of a multipart request; the phone never holds Cloudinary credentials.</li>
+  <li>Multer keeps the file in memory and rejects other file types or larger files; the server streams the buffer to Cloudinary and stores the returned URL and public id.</li>
+  <li>When a profile photo is replaced or removed, or a report is deleted, the old image is deleted from Cloudinary. A photo uploaded for a report that could not be saved is also deleted.</li>
+</ol>
+
+<h3>13.8 Administrative moderation</h3>
+<p>Every administrator route runs <code>requireAuth</code> and <code>requireAdmin</code>. The dashboard statistics are counted by the database (total users, active lost, active found, recovered, reports in the last seven days and pending claims; the pending count uses an aggregation that unwinds the embedded claims). <code>GET /api/admin/items</code> returns all reports, which the app can search and filter; <code>DELETE /api/admin/items/:id</code> removes a report and its photo and notifies the reporter. <code>GET /api/admin/claims</code> lists claims without their private descriptions. There is no administrator route for approving or rejecting claims, and the claim decision route refuses anyone who is not the item's reporter, so ownership decisions remain with the finder.</p>
+
+<!-- ============================== 14 ============================== -->
+<h1 id="s14" data-toc="14. Deployment Details">14. Deployment Details</h1>
+<p><b>LostLink has not been deployed to a public production environment.</b> It currently runs in a development setup: the backend runs on a developer's computer, the mobile app is served by the Expo development server and opened in Expo Go on an Android phone or emulator, and the database and image storage use the cloud services MongoDB Atlas and Cloudinary.</p>
+<h3>14.1 Environment configuration</h3>
+<p>Configuration is read from <code>.env</code> files, which are excluded from version control; example files without real values are provided.</p>
+<table class="data compact">
+  <thead><tr><th style="width:36%">Variable</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td colspan="2" class="group">backend/.env</td></tr>
+    <tr><td>MONGODB_URI</td><td>MongoDB Atlas connection string including the database name</td></tr>
+    <tr><td>JWT_SECRET</td><td>Long random string used to sign tokens</td></tr>
+    <tr><td>PORT</td><td>API port (default 5000)</td></tr>
+    <tr><td>CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET</td><td>Cloudinary credentials (backend only)</td></tr>
+    <tr><td>ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD</td><td>Administrator account created by the seed script</td></tr>
+    <tr><td colspan="2" class="group">mobile/.env</td></tr>
+    <tr><td>EXPO_PUBLIC_API_URL</td><td>Address of the backend, e.g. <code>http://10.0.2.2:5000</code> for the Android emulator or <code>http://&lt;computer's LAN IP&gt;:5000</code> for a phone on the same Wi-Fi</td></tr>
+  </tbody>
+</table>
+<h3>14.2 MongoDB Atlas and Cloudinary</h3>
+<ol>
+  <li>Create a free Atlas cluster, add a database user and allow the developer's IP address under Network Access.</li>
+  <li>Copy the connection string and add the database name (for example <code>…mongodb.net/LostLink?…</code>). The <code>users</code> and <code>items</code> collections and their indexes are created automatically by Mongoose when the server starts.</li>
+  <li>Create a Cloudinary account and copy the cloud name, API key and API secret into <code>backend/.env</code>. Photos are stored in the folders <code>lostlink/items</code> and <code>lostlink/profiles</code>. Without these values the app still works, but photo uploads are refused.</li>
+</ol>
+<h3>14.3 Backend setup and execution</h3>
+<pre>cd backend
+npm install                # install dependencies
+cp .env.example .env       # then fill in the values
+npm run seed:admin         # create or update the administrator account
+npm run dev                # start the API (port 5000, auto-reload)</pre>
+<p>A compiled build can be produced with <code>npm run build</code> and started with <code>npm start</code>. <code>GET /api/health</code> reports whether the server is connected to the database.</p>
+<h3>14.4 Mobile application setup and testing</h3>
+<pre>cd mobile
+npm install
+cp .env.example .env       # set EXPO_PUBLIC_API_URL
+npx expo start --clear     # start the Expo development server</pre>
+<p>On a phone, the Expo Go app scans the QR code shown by the development server; the phone must be on the same network as the computer and able to reach port 5000. On the Android Studio emulator, pressing <code>a</code> in the Expo terminal opens the app. During development the app was checked with <code>tsc --noEmit</code>, ESLint, <code>expo-doctor</code> and an Android bundle export, and tested manually on an Android emulator against the real Atlas and Cloudinary services.</p>
+<h3>14.5 Development setup compared with production</h3>
+<table class="data compact">
+  <thead><tr><th style="width:22%">Aspect</th><th>Current development setup</th><th>What a production deployment would need (not done)</th></tr></thead>
+  <tbody>
+    <tr><td>Backend</td><td>Runs on the developer's computer over HTTP on the local network</td><td>A cloud host with a public HTTPS address and a process manager</td></tr>
+    <tr><td>Mobile app</td><td>Opened in Expo Go from the development server</td><td>A signed Android build (for example with EAS Build) distributed to students</td></tr>
+    <tr><td>Configuration</td><td>Local <code>.env</code> files</td><td>Secrets stored in the hosting platform; restricted Atlas network access</td></tr>
+    <tr><td>Database and images</td><td>MongoDB Atlas free cluster and Cloudinary free plan</td><td>The same services, sized for the expected number of users, with backups</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== Conclusion ============================== -->
+<h1 id="s15" data-toc="15. Conclusion">15. Conclusion</h1>
+<p>LostLink provides the VJTI campus with a single place to report, find and return lost belongings. Students report lost and found items with photographs, search and filter the listings, and claim found items through a structured process in which the finder verifies ownership. The claim workflow is implemented with atomic database updates, so an item can never be given to two claimants, and report and claim submissions are protected against duplicates caused by repeated taps or lost connections. Notifications and a claim progress tracker keep students informed, while administrators moderate the content from a separate interface without deciding ownership.</p>
+<p>The project combines a React Native (Expo) mobile application, a Node.js/Express API, MongoDB Atlas and Cloudinary, using a deliberately simple data model of two collections with embedded claims and notifications. The main remaining steps towards real use on campus are deployment of the backend to a public server, an installable Android build and push notifications.</p>
+
+<!-- ============================== References ============================== -->
+<h1 id="s16" data-toc="References">References</h1>
+<ol class="refs">
+  <li>Expo documentation, SDK 58 – Expo Router, Image Picker, Secure Store. https://docs.expo.dev</li>
+  <li>React Native documentation. https://reactnative.dev/docs</li>
+  <li>Express 5 documentation. https://expressjs.com</li>
+  <li>Mongoose documentation – schemas, validation and indexes. https://mongoosejs.com/docs</li>
+  <li>MongoDB manual – atomic operations on a single document, array update operators and partial indexes. https://www.mongodb.com/docs/manual</li>
+  <li>RFC 7519, JSON Web Token (JWT). https://www.rfc-editor.org/rfc/rfc7519</li>
+  <li>Cloudinary Node.js SDK documentation. https://cloudinary.com/documentation/node_integration</li>
+  <li>OMG Unified Modeling Language (UML) specification, version 2.5.1 – use case diagrams.</li>
+  <li>VJTI emblem on the cover page: "VJTI Logo", Wikimedia Commons, licensed CC BY-SA 4.0.</li>
+  <li>Campus photograph used in the app: "VJTI College Quadrangle" by Paras2130, Wikimedia Commons, licensed CC BY-SA 4.0.</li>
+</ol>
+
+</body>
+</html>

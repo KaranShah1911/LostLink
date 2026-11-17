@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import ClaimCard from '@/components/ClaimCard';
+import ClaimTracker from '@/components/ClaimTracker';
 import ItemImage from '@/components/ItemImage';
 import StatusBadge from '@/components/StatusBadge';
 import { ErrorState, Loading } from '@/components/StateViews';
@@ -14,10 +15,15 @@ import { openEmail } from '@/lib/email';
 import { formatDate, formatTimestamp } from '@/lib/format';
 import { useClaimReview } from '@/lib/useClaimReview';
 import { useFocusData } from '@/lib/useFocusData';
-import { cardShadow, colors, radius } from '@/constants';
+import { cardShadow, radius, ThemeColors } from '@/constants';
 import type { Claim, ItemDetails } from '@/types';
+import { useTheme } from '@/context/ThemeContext';
+import { useBottomPadding } from '@/lib/useBottomPadding';
+import KeyboardAvoider from '@/components/KeyboardAvoider';
 
 export default function ItemDetailsScreen() {
+  const bottomPadding = useBottomPadding();
+  const { colors, styles } = useTheme(makeStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuth();
 
@@ -58,9 +64,12 @@ export default function ItemDetailsScreen() {
   ];
 
   return (
+    // KeyboardAvoider + keyboardShouldPersistTaps keep the claim rejection note visible while typing.
+    <KeyboardAvoider>
     <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} colors={[colors.teal]} />}
+      contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
+      keyboardShouldPersistTaps="handled"
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} colors={[colors.secondary]} />}
     >
       <ItemImage uri={item.imageUrl} category={item.category} style={styles.image} iconSize={64} />
 
@@ -73,7 +82,7 @@ export default function ItemDetailsScreen() {
       <View style={styles.card}>
         {details.map((detail, index) => (
           <View key={detail.label} style={[styles.row, index > 0 && styles.rowBorder]}>
-            <Ionicons name={detail.icon} size={20} color={colors.teal} />
+            <Ionicons name={detail.icon} size={20} color={colors.secondary} />
             <View style={{ flex: 1 }}>
               <Text style={styles.rowLabel}>{detail.label}</Text>
               <Text style={styles.rowValue}>{detail.value}</Text>
@@ -128,6 +137,7 @@ export default function ItemDetailsScreen() {
         </>
       )}
     </ScrollView>
+    </KeyboardAvoider>
   );
 }
 
@@ -141,11 +151,12 @@ function OwnReportSection({
   approve,
   reject,
 }: { data: ItemDetails; claims: Claim[] | null } & Review) {
+  const { colors, styles } = useTheme(makeStyles);
   const { item } = data;
 
   if (item.type === 'LOST') {
     return (
-      <Notice icon="information-circle-outline" color={colors.teal}>
+      <Notice icon="information-circle-outline" color={colors.secondary}>
         This is your report. Once you get the item back, mark it as recovered from My Activity → My Reports.
       </Notice>
     );
@@ -185,27 +196,22 @@ function OwnReportSection({
 
 /** Shown to a student who has already claimed this item. */
 function MyClaimNotice({ claim }: { claim: NonNullable<ItemDetails['myClaim']> }) {
-  const text = {
-    PENDING: 'You have claimed this item. The person who found it will review your claim.',
-    APPROVED: 'Your claim was approved! Contact the finder to arrange the return.',
-    REJECTED: `Your claim was rejected.${claim.rejectionReason ? ` Reason: ${claim.rejectionReason}` : ''}`,
-  }[claim.status];
+  const { colors, styles } = useTheme(makeStyles);
   const color = { PENDING: colors.amber, APPROVED: colors.green, REJECTED: colors.red }[claim.status];
 
   return (
-    <View style={[styles.notice, { borderLeftColor: color }]}>
-      <View style={{ flex: 1, gap: 6 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <Text style={styles.noticeTitle}>Your claim</Text>
-          <StatusBadge label={claim.status} />
-        </View>
-        <Text style={styles.noticeText}>{text}</Text>
+    <View style={[styles.notice, styles.trackerCard, { borderLeftColor: color }]}>
+      <View style={styles.trackerHeader}>
+        <Text style={styles.noticeTitle}>Your claim progress</Text>
+        <StatusBadge label={claim.status} />
       </View>
+      <ClaimTracker status={claim.status} createdAt={claim.createdAt} updatedAt={claim.updatedAt} rejectionReason={claim.rejectionReason} />
     </View>
   );
 }
 
 function Notice({ icon, color, children }: { icon: keyof typeof Ionicons.glyphMap; color: string; children: string }) {
+  const { styles } = useTheme(makeStyles);
   return (
     <View style={[styles.notice, { borderLeftColor: color }]}>
       <Ionicons name={icon} size={20} color={color} />
@@ -214,32 +220,35 @@ function Notice({ icon, color, children }: { icon: keyof typeof Ionicons.glyphMa
   );
 }
 
-const styles = StyleSheet.create({
-  container: { padding: 16, paddingBottom: 40 },
-  image: { width: '100%', height: 260, borderRadius: radius.lg },
-  badges: { flexDirection: 'row', gap: 8, marginTop: 16 },
-  title: { fontSize: 24, fontWeight: '800', color: colors.text, marginTop: 8, marginBottom: 16 },
-  card: { backgroundColor: colors.card, borderRadius: radius.lg, paddingHorizontal: 16, marginBottom: 20, ...cardShadow },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12 },
-  rowBorder: { borderTopWidth: 1, borderTopColor: colors.border },
-  rowLabel: { fontSize: 12, color: colors.muted },
-  rowValue: { fontSize: 15, color: colors.text, fontWeight: '600', marginTop: 2 },
-  sectionTitle: { fontSize: 17, fontWeight: '800', color: colors.text, marginBottom: 6 },
-  description: { fontSize: 15, color: colors.text, lineHeight: 22, marginBottom: 24 },
-  noDescription: { color: colors.muted, fontStyle: 'italic' },
-  claimsHeader: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  claimsHint: { fontSize: 13, color: colors.muted, marginBottom: 12, lineHeight: 19 },
-  notice: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: colors.card,
-    padding: 14,
-    borderRadius: radius.md,
-    borderLeftWidth: 4,
-    marginBottom: 12,
-    ...cardShadow,
-  },
-  noticeTitle: { fontSize: 15, fontWeight: '800', color: colors.text },
-  noticeText: { color: colors.text, fontSize: 14, lineHeight: 20 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    container: { padding: 16 },
+    image: { width: '100%', height: 260, borderRadius: radius.lg },
+    badges: { flexDirection: 'row', gap: 8, marginTop: 16 },
+    title: { fontSize: 24, fontWeight: '800', color: colors.text, marginTop: 8, marginBottom: 16 },
+    card: { backgroundColor: colors.card, borderRadius: radius.lg, paddingHorizontal: 16, marginBottom: 20, ...cardShadow },
+    row: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12 },
+    rowBorder: { borderTopWidth: 1, borderTopColor: colors.border },
+    rowLabel: { fontSize: 12, color: colors.muted },
+    rowValue: { fontSize: 15, color: colors.text, fontWeight: '600', marginTop: 2 },
+    sectionTitle: { fontSize: 17, fontWeight: '800', color: colors.text, marginBottom: 6 },
+    description: { fontSize: 15, color: colors.text, lineHeight: 22, marginBottom: 24 },
+    noDescription: { color: colors.muted, fontStyle: 'italic' },
+    claimsHeader: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    claimsHint: { fontSize: 13, color: colors.muted, marginBottom: 12, lineHeight: 19 },
+    notice: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      backgroundColor: colors.card,
+      padding: 14,
+      borderRadius: radius.md,
+      borderLeftWidth: 4,
+      marginBottom: 12,
+      ...cardShadow,
+    },
+    trackerCard: { flexDirection: 'column', alignItems: 'stretch' },
+    trackerHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
+    noticeTitle: { fontSize: 15, fontWeight: '800', color: colors.text },
+    noticeText: { color: colors.text, fontSize: 14, lineHeight: 20 },
+  });

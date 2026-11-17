@@ -1,0 +1,92 @@
+<svg width="1126pt" height="469pt"
+ viewBox="0.00 0.00 1126.00 469.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 451.2)">
+<title>database</title>
+<polygon fill="white" stroke="none" points="-18,18 -18,-451.2 1107.87,-451.2 1107.87,18 -18,18"/>
+<!-- users -->
+<g id="node1" class="node">
+<title>users</title>
+<polygon fill="none" stroke="#1f3a5f" points="0,0 0,-321.2 346.83,-321.2 346.83,0 0,0"/>
+<polygon fill="#1f3a5f" stroke="none" points="1,-291 1,-320.2 345.83,-320.2 345.83,-291 1,-291"/>
+<text xml:space="preserve" text-anchor="start" x="111.16" y="-301.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="16.00" fill="white">users</text>
+<text xml:space="preserve" text-anchor="start" x="153.86" y="-301.8" font-family="Helvetica,sans-Serif" font-size="16.00" fill="white"> (collection)</text>
+<text xml:space="preserve" text-anchor="start" x="6" y="-271" font-family="Helvetica,sans-Serif" font-size="15.00">_id</text>
+<text xml:space="preserve" text-anchor="start" x="209.43" y="-271" font-family="Helvetica,sans-Serif" font-size="15.00">ObjectId (PK)</text>
+<text xml:space="preserve" text-anchor="start" x="6" y="-243" font-family="Helvetica,sans-Serif" font-size="15.00">name, email (unique)</text>
+<text xml:space="preserve" text-anchor="start" x="209.43" y="-243" font-family="Helvetica,sans-Serif" font-size="15.00">String</text>
+<text xml:space="preserve" text-anchor="start" x="6" y="-215" font-family="Helvetica,sans-Serif" font-size="15.00">password</text>
+<text xml:space="preserve" text-anchor="start" x="209.43" y="-215" font-family="Helvetica,sans-Serif" font-size="15.00">String (bcrypt hash)</text>
+<text xml:space="preserve" text-anchor="start" x="6" y="-187" font-family="Helvetica,sans-Serif" font-size="15.00">role</text>
+<text xml:space="preserve" text-anchor="start" x="209.43" y="-187" font-family="Helvetica,sans-Serif" font-size="15.00">STUDENT | ADMIN</text>
+<text xml:space="preserve" text-anchor="start" x="6" y="-159" font-family="Helvetica,sans-Serif" font-size="15.00">profileImage, selectedTheme</text>
+<text xml:space="preserve" text-anchor="start" x="209.43" y="-159" font-family="Helvetica,sans-Serif" font-size="15.00">String</text>
+<text xml:space="preserve" text-anchor="start" x="6" y="-131" font-family="Helvetica,sans-Serif" font-size="15.00">createdAt, updatedAt</text>
+<text xml:space="preserve" text-anchor="start" x="209.43" y="-131" font-family="Helvetica,sans-Serif" font-size="15.00">Date</text>
+<polygon fill="#f4f6f9" stroke="none" points="9,-9 9,-115 337.83,-115 337.83,-9 9,-9"/>
+<polygon fill="none" stroke="#7a8797" points="9,-9 9,-115 337.83,-115 337.83,-9 9,-9"/>
+<text xml:space="preserve" text-anchor="start" x="14" y="-97.5" font-family="Helvetica,sans-Serif" font-style="italic" font-size="15.00">notifications[ ]</text>
+<text xml:space="preserve" text-anchor="start" x="105.71" y="-97.5" font-family="Helvetica,sans-Serif" font-size="15.00"> (embedded, newest 50)</text>
+<text xml:space="preserve" text-anchor="start" x="14" y="-69" font-family="Helvetica,sans-Serif" font-size="15.00">type, title, message</text>
+<text xml:space="preserve" text-anchor="start" x="187.4" y="-69" font-family="Helvetica,sans-Serif" font-size="15.00">String</text>
+<text xml:space="preserve" text-anchor="start" x="14" y="-43" font-family="Helvetica,sans-Serif" font-size="15.00">relatedItem</text>
+<text xml:space="preserve" text-anchor="start" x="187.4" y="-43" font-family="Helvetica,sans-Serif" font-size="15.00">ObjectId → items</text>
+<text xml:space="preserve" text-anchor="start" x="14" y="-17" font-family="Helvetica,sans-Serif" font-size="15.00">relatedClaim, isRead</text>
+<text xml:space="preserve" text-anchor="start" x="187.4" y="-17" font-family="Helvetica,sans-Serif" font-size="15.00">ObjectId, Boolean</text>
+</g>
+<!-- items -->
+<g id="node2" class="node">
+<title>items</title>
+<polygon fill="none" stroke="#1f3a5f" points="618.46,-56 618.46,-433.2 1089.87,-433.2 1089.87,-56 618.46,-56"/>
+<polygon fill="#1f3a5f" stroke="none" points="619.46,-403 619.46,-432.2 1088.87,-432.2 1088.87,-403 619.46,-403"/>
+<text xml:space="preserve" text-anchor="start" x="792.37" y="-413.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="16.00" fill="white">items</text>
+<text xml:space="preserve" text-anchor="start" x="834.16" y="-413.8" font-family="Helvetica,sans-Serif" font-size="16.00" fill="white"> (collection)</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-383" font-family="Helvetica,sans-Serif" font-size="15.00">_id</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-383" font-family="Helvetica,sans-Serif" font-size="15.00">ObjectId (PK)</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-355" font-family="Helvetica,sans-Serif" font-size="15.00">title, category, type</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-355" font-family="Helvetica,sans-Serif" font-size="15.00">String (type: LOST | FOUND)</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-327" font-family="Helvetica,sans-Serif" font-size="15.00">description, location, date</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-327" font-family="Helvetica,sans-Serif" font-size="15.00">String, String, Date</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-299" font-family="Helvetica,sans-Serif" font-size="15.00">imageUrl, imagePublicId</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-299" font-family="Helvetica,sans-Serif" font-size="15.00">String (optional)</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-271" font-family="Helvetica,sans-Serif" font-size="15.00">reportedBy</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-271" font-family="Helvetica,sans-Serif" font-size="15.00">ObjectId → users</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-243" font-family="Helvetica,sans-Serif" font-size="15.00">status</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-243" font-family="Helvetica,sans-Serif" font-size="15.00">ACTIVE | RECOVERED</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-215" font-family="Helvetica,sans-Serif" font-size="15.00">submissionId, submissionHash</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-215" font-family="Helvetica,sans-Serif" font-size="15.00">String (idempotency)</text>
+<text xml:space="preserve" text-anchor="start" x="624.46" y="-187" font-family="Helvetica,sans-Serif" font-size="15.00">createdAt, updatedAt</text>
+<text xml:space="preserve" text-anchor="start" x="864.75" y="-187" font-family="Helvetica,sans-Serif" font-size="15.00">Date</text>
+<polygon fill="#f4f6f9" stroke="none" points="627.46,-65 627.46,-171 1080.87,-171 1080.87,-65 627.46,-65"/>
+<polygon fill="none" stroke="#7a8797" points="627.46,-65 627.46,-171 1080.87,-171 1080.87,-65 627.46,-65"/>
+<text xml:space="preserve" text-anchor="start" x="632.46" y="-153.5" font-family="Helvetica,sans-Serif" font-style="italic" font-size="15.00">claims[ ]</text>
+<text xml:space="preserve" text-anchor="start" x="687.47" y="-153.5" font-family="Helvetica,sans-Serif" font-size="15.00"> (embedded)</text>
+<text xml:space="preserve" text-anchor="start" x="632.46" y="-125" font-family="Helvetica,sans-Serif" font-size="15.00">claimedBy</text>
+<text xml:space="preserve" text-anchor="start" x="820.54" y="-125" font-family="Helvetica,sans-Serif" font-size="15.00">ObjectId → users</text>
+<text xml:space="preserve" text-anchor="start" x="632.46" y="-99" font-family="Helvetica,sans-Serif" font-size="15.00">description (private), status</text>
+<text xml:space="preserve" text-anchor="start" x="820.54" y="-99" font-family="Helvetica,sans-Serif" font-size="15.00">PENDING | APPROVED | REJECTED</text>
+<text xml:space="preserve" text-anchor="start" x="632.46" y="-73" font-family="Helvetica,sans-Serif" font-size="15.00">rejectionReason, requestId</text>
+<text xml:space="preserve" text-anchor="start" x="820.54" y="-73" font-family="Helvetica,sans-Serif" font-size="15.00">String (optional)</text>
+</g>
+<!-- users&#45;&gt;items -->
+<g id="edge1" class="edge">
+<title>users:e&#45;&gt;items:w</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.2" d="M356.53,-277C469.27,-277 501.04,-277 618.46,-277"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.2" points="356.65,-274.2 348.65,-277 356.65,-279.8 356.65,-274.2"/>
+<text xml:space="preserve" text-anchor="middle" x="482.65" y="-281.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">items.reportedBy</text>
+</g>
+<!-- users&#45;&gt;items -->
+<g id="edge2" class="edge">
+<title>users:e&#45;&gt;items:w</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.2" stroke-dasharray="5,2" d="M356.12,-273.95C404.91,-252.98 611.4,-131 627.46,-131"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.2" points="355.28,-271.28 348.55,-276.43 357.03,-276.6 355.28,-271.28"/>
+<text xml:space="preserve" text-anchor="middle" x="482.65" y="-253.27" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">claims[].claimedBy</text>
+</g>
+<!-- users&#45;&gt;items -->
+<g id="edge3" class="edge">
+<title>users:e&#45;&gt;items:w</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.2" stroke-dasharray="1,5" d="M337.83,-49C444.86,-49 491.13,-59.26 560.46,-140.8 631.62,-224.49 512.78,-379.27 608.83,-388.56"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.2" points="608.53,-391.35 616.65,-388.92 608.78,-385.76 608.53,-391.35"/>
+<text xml:space="preserve" text-anchor="middle" x="482.65" y="-145" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">notifications[].relatedItem</text>
+</g>
+</g>
+</svg>

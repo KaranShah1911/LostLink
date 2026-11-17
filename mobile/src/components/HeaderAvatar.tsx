@@ -1,14 +1,16 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
-import { colors } from '@/constants';
+import { ThemeColors } from '@/constants';
 import Avatar from './Avatar';
+import { useTheme } from '@/context/ThemeContext';
 
 /**
  * The round button at the top-right of every tab screen. It is the only way to open Profile.
  * It reads the user from AuthContext, so a new profile photo shows here immediately.
  */
 export default function HeaderAvatar() {
+  const { styles } = useTheme(makeStyles);
   const { user } = useAuth();
   if (!user) return null;
   return (
@@ -24,6 +26,7 @@ export default function HeaderAvatar() {
   );
 }
 
-const styles = StyleSheet.create({
-  ring: { marginRight: 14, padding: 2, borderRadius: 21, borderWidth: 2, borderColor: colors.turquoise },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    ring: { marginRight: 14, padding: 2, borderRadius: 21, borderWidth: 2, borderColor: colors.highlight },
+  });

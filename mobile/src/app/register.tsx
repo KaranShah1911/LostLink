@@ -3,7 +3,8 @@ import { Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from 'react-n
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AuthHeader from '@/components/AuthHeader';
+import AuthBrand from '@/components/AuthBrand';
+import CampusBackdrop from '@/components/CampusBackdrop';
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import ImagePickerSheet from '@/components/ImagePickerSheet';
@@ -13,12 +14,14 @@ import { ErrorBanner } from '@/components/StateViews';
 import { useAuth } from '@/context/AuthContext';
 import { getErrorMessage } from '@/lib/api';
 import { EMAIL_PATTERN } from '@/lib/format';
-import { colors, radius } from '@/constants';
+import { cardShadow, radius, ThemeColors } from '@/constants';
 import type { PickedImage } from '@/types';
+import { useTheme } from '@/context/ThemeContext';
 
 type Field = 'name' | 'email' | 'password' | 'confirmPassword';
 
 export default function RegisterScreen() {
+  const { colors, styles } = useTheme(makeStyles);
   const { register } = useAuth();
   const [form, setForm] = useState<Record<Field, string>>({ name: '', email: '', password: '', confirmPassword: '' });
   const [photo, setPhoto] = useState<PickedImage | null>(null);
@@ -63,27 +66,29 @@ export default function RegisterScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={[]}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      {/* Full-screen faded VJTI campus photo behind the form. */}
+      <CampusBackdrop />
       <KeyboardAvoider>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-          <AuthHeader>
-            <View style={styles.top}>
-              <Pressable onPress={goToLogin} hitSlop={12} style={styles.back} accessibilityLabel="Back to login">
-                <Ionicons name="arrow-back" size={24} color={colors.white} />
-              </Pressable>
-              <Text style={styles.heading}>Join LostLink</Text>
-              <Text style={styles.subheading}>Create a student account to report and find items on campus.</Text>
-            </View>
-          </AuthHeader>
+          <View style={styles.top}>
+            <Pressable onPress={goToLogin} hitSlop={12} style={styles.back} accessibilityLabel="Back to login">
+              <Ionicons name="arrow-back" size={22} color={colors.primary} />
+            </Pressable>
+            <AuthBrand compact />
+          </View>
 
           <View style={styles.card}>
+            <Text style={styles.heading}>Create your account</Text>
+            <Text style={styles.subheading}>Join LostLink to report and find items on campus.</Text>
+
             <View style={styles.photoRow}>
               <Pressable onPress={() => setSheetOpen(true)} accessibilityLabel="Choose profile photo">
                 {photo ? (
                   <Avatar name={form.name || '?'} uri={photo.uri} size={76} />
                 ) : (
                   <View style={styles.photoPlaceholder}>
-                    <Ionicons name="camera" size={28} color={colors.teal} />
+                    <Ionicons name="camera" size={28} color={colors.secondary} />
                   </View>
                 )}
               </Pressable>
@@ -154,35 +159,30 @@ export default function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.navy },
-  scroll: { flexGrow: 1 },
-  top: { paddingTop: 12, paddingBottom: 24 },
-  back: { marginBottom: 14, alignSelf: 'flex-start' },
-  // Text shadows keep the white text readable on top of the photo.
-  heading: { fontSize: 28, fontWeight: '800', color: colors.white, textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 6 },
-  subheading: { fontSize: 14, fontWeight: '600', color: colors.white, marginTop: 6, lineHeight: 20, textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 6 },
-  card: {
-    flex: 1,
-    backgroundColor: colors.background,
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
-    padding: 24,
-  },
-  photoRow: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 20 },
-  photoPlaceholder: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: colors.teal,
-    backgroundColor: colors.tealSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  photoTitle: { fontSize: 14, fontWeight: '700', color: colors.text },
-  photoActions: { flexDirection: 'row', gap: 16, marginTop: 6, flexWrap: 'wrap' },
-  footer: { textAlign: 'center', marginTop: 20, color: colors.muted, fontSize: 14 },
-  link: { color: colors.teal, fontWeight: '800', fontSize: 14 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    scroll: { flexGrow: 1, padding: 20, paddingTop: 8 },
+    top: { paddingBottom: 4 },
+    back: { position: 'absolute', top: 14, left: 0, zIndex: 1, padding: 6, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.85)' },
+    // Slightly see-through white card, so the campus photo still shows around the form.
+    card: { backgroundColor: 'rgba(255,255,255,0.94)', borderRadius: radius.xl, padding: 22, ...cardShadow },
+    heading: { fontSize: 22, fontWeight: '800', color: colors.text },
+    subheading: { fontSize: 14, color: colors.muted, marginTop: 4, marginBottom: 18 },
+    photoRow: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 20 },
+    photoPlaceholder: {
+      width: 76,
+      height: 76,
+      borderRadius: 38,
+      borderWidth: 1.5,
+      borderStyle: 'dashed',
+      borderColor: colors.secondary,
+      backgroundColor: colors.secondarySoft,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    photoTitle: { fontSize: 14, fontWeight: '700', color: colors.text },
+    photoActions: { flexDirection: 'row', gap: 16, marginTop: 6, flexWrap: 'wrap' },
+    footer: { textAlign: 'center', marginTop: 20, color: colors.muted, fontSize: 14 },
+    link: { color: colors.secondary, fontWeight: '800', fontSize: 14 },
+  });

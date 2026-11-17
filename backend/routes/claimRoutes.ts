@@ -15,7 +15,8 @@ import { Router, Response } from 'express';
 import { Types } from 'mongoose';
 import { Item } from '../models/Item';
 import { requireAuth } from '../middleware/authMiddleware';
-import { asString, isValidId } from '../utils/validation';
+import { asString, isValidId, REQUEST_ID_PATTERN } from '../utils/validation';
+import { notify } from '../utils/notify';
 
 const router = Router();
 
@@ -26,13 +27,20 @@ function sendError(res: Response, status: number, message: string) {
   return res.status(status).json({ success: false, message });
 }
 
-// POST /api/items/:id/claims — body: { "description": "why it is mine + identifying details" }
+// POST /api/items/:id/claims — body: { "description": "why it is mine + identifying details", "requestId"?: "<random id>" }
+//
+// Idempotency: the app creates one random requestId per claim form and sends it with every attempt.
+// The $push below can only succeed once per student per item (the filter checks both claimedBy and
+// requestId atomically), so a retry after a timeout cannot add a second claim. When a retry arrives
+// for a claim that was already saved, the saved claim is returned with 200 instead of an error.
 router.post('/items/:id/claims', requireAuth, async (req, res) => {
   const itemId = req.params.id;
   const userId = req.user!._id;
   const description = asString(req.body?.description);
+  const requestId = asString(req.body?.requestId) || undefined;
 
   if (!isValidId(itemId)) return sendError(res, 400, 'Invalid item id');
+  if (requestId && !REQUEST_ID_PATTERN.test(requestId)) return sendError(res, 400, 'Invalid request id');
   if (req.user!.role !== 'STUDENT') return sendError(res, 403, 'Only students can claim items');
   if (description.length < 10 || description.length > 1000) {
     return sendError(res, 400, 'Please describe the item in 10 to 1000 characters');
@@ -46,8 +54,9 @@ router.post('/items/:id/claims', requireAuth, async (req, res) => {
       status: 'ACTIVE',
       reportedBy: { $ne: userId }, // cannot claim your own report
       'claims.claimedBy': { $ne: userId }, // one claim per student per item
+      ...(requestId ? { 'claims.requestId': { $ne: requestId } } : {}), // the same request is never added twice
     },
-    { $push: { claims: { claimedBy: userId, description, status: 'PENDING' } } },
+    { $push: { claims: { claimedBy: userId, description, status: 'PENDING', requestId } } },
     { new: true, runValidators: true }
   ).select('+claims');
 
@@ -55,6 +64,15 @@ router.post('/items/:id/claims', requireAuth, async (req, res) => {
     // Work out which rule failed so the student gets a useful message.
     const item = await Item.findById(itemId).select('+claims');
     if (!item) return sendError(res, 404, 'Item not found');
+    // A retry of a claim that was already saved: return it instead of an error.
+    const savedClaim = requestId ? item.claims.find((c) => c.claimedBy.equals(userId) && c.requestId === requestId) : undefined;
+    if (savedClaim) {
+      return res.status(200).json({
+        success: true,
+        message: 'Your claim was already submitted. No duplicate was created.',
+        data: { claim: savedClaim, alreadySaved: true },
+      });
+    }
     if (item.type !== 'FOUND') return sendError(res, 400, 'Only FOUND items can be claimed');
     if (item.status !== 'ACTIVE') return sendError(res, 409, 'This item has already been recovered');
     if (item.reportedBy.equals(userId)) return sendError(res, 400, 'You cannot claim an item you reported');
@@ -62,6 +80,13 @@ router.post('/items/:id/claims', requireAuth, async (req, res) => {
   }
 
   const claim = updated.claims.find((c) => c.claimedBy.equals(userId))!;
+  await notify(updated.reportedBy, {
+    type: 'CLAIM_RECEIVED',
+    title: 'New claim on your found item',
+    message: `${req.user!.name} says "${updated.title}" belongs to them. Review the claim.`,
+    relatedItem: updated._id,
+    relatedClaim: claim._id,
+  });
   res.status(201).json({
     success: true,
     message: 'Claim submitted. The person who found this item will review it.',
@@ -143,6 +168,42 @@ router.patch('/items/:id/claims/:claimId', requireAuth, async (req, res) => {
     if (!claim) return sendError(res, 404, 'Claim not found');
     if (item.status !== 'ACTIVE') return sendError(res, 409, 'This item has already been recovered');
     return sendError(res, 409, `This claim has already been ${claim.status.toLowerCase()}`);
+  }
+
+  // Tell the claimant(s) what happened. The update above can only succeed once per claim,
+  // so each of these notifications is sent exactly once.
+  const chosen = updated.claims.find((c) => c._id.equals(claimObjectId))!;
+  if (action === 'APPROVE') {
+    await notify(chosen.claimedBy, {
+      type: 'CLAIM_APPROVED',
+      title: 'Your claim was approved',
+      message: `The finder approved your claim for "${updated.title}". Contact them to arrange a safe hand-over.`,
+      relatedItem: updated._id,
+      relatedClaim: chosen._id,
+    });
+    // Claims closed automatically by this approval are the ones updated at the same moment.
+    const closed = updated.claims.filter(
+      (c) => !c._id.equals(claimObjectId) && c.status === 'REJECTED' && c.updatedAt.getTime() === now.getTime()
+    );
+    for (const other of closed) {
+      await notify(other.claimedBy, {
+        type: 'CLAIM_CLOSED',
+        title: 'Your claim was closed',
+        message: `"${updated.title}" has already been returned to another claimant.`,
+        relatedItem: updated._id,
+        relatedClaim: other._id,
+      });
+    }
+  } else {
+    await notify(chosen.claimedBy, {
+      type: 'CLAIM_REJECTED',
+      title: 'Your claim was rejected',
+      message: reason
+        ? `Your claim for "${updated.title}" was rejected. Reason: ${reason}`
+        : `Your claim for "${updated.title}" was rejected by the finder.`,
+      relatedItem: updated._id,
+      relatedClaim: chosen._id,
+    });
   }
 
   await updated.populate('claims.claimedBy', CLAIMANT_FIELDS);

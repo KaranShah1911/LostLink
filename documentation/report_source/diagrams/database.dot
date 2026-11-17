@@ -1,0 +1,51 @@
+// Figure: Database design - exactly two MongoDB collections with embedded documents
+digraph database {
+  graph [rankdir=LR, fontname="Helvetica", fontsize=17, nodesep=0.5, ranksep=1.6, splines=true, pad=0.25];
+  node  [fontname="Helvetica", fontsize=15, shape=plain];
+  edge  [fontname="Helvetica", fontsize=14, color="#4A5568", fontcolor="#2D3748", penwidth=1.2, arrowsize=0.8];
+
+  users [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#1F3A5F">
+  <TR><TD BGCOLOR="#1F3A5F" COLSPAN="2"><FONT COLOR="white" POINT-SIZE="16"><B>users</B> (collection)</FONT></TD></TR>
+  <TR><TD ALIGN="LEFT">_id</TD><TD ALIGN="LEFT" PORT="id">ObjectId (PK)</TD></TR>
+  <TR><TD ALIGN="LEFT">name, email (unique)</TD><TD ALIGN="LEFT">String</TD></TR>
+  <TR><TD ALIGN="LEFT">password</TD><TD ALIGN="LEFT">String (bcrypt hash)</TD></TR>
+  <TR><TD ALIGN="LEFT">role</TD><TD ALIGN="LEFT">STUDENT | ADMIN</TD></TR>
+  <TR><TD ALIGN="LEFT">profileImage, selectedTheme</TD><TD ALIGN="LEFT">String</TD></TR>
+  <TR><TD ALIGN="LEFT">createdAt, updatedAt</TD><TD ALIGN="LEFT">Date</TD></TR>
+  <TR><TD COLSPAN="2" CELLPADDING="8">
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" COLOR="#7A8797" BGCOLOR="#F4F6F9">
+      <TR><TD COLSPAN="2" ALIGN="LEFT"><I>notifications[ ]</I> (embedded, newest 50)</TD></TR>
+      <TR><TD ALIGN="LEFT">type, title, message</TD><TD ALIGN="LEFT">String</TD></TR>
+      <TR><TD ALIGN="LEFT">relatedItem</TD><TD ALIGN="LEFT" PORT="nitem">ObjectId → items</TD></TR>
+      <TR><TD ALIGN="LEFT">relatedClaim, isRead</TD><TD ALIGN="LEFT">ObjectId, Boolean</TD></TR>
+    </TABLE>
+  </TD></TR>
+</TABLE>>];
+
+  items [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#1F3A5F">
+  <TR><TD BGCOLOR="#1F3A5F" COLSPAN="2"><FONT COLOR="white" POINT-SIZE="16"><B>items</B> (collection)</FONT></TD></TR>
+  <TR><TD ALIGN="LEFT" PORT="id">_id</TD><TD ALIGN="LEFT">ObjectId (PK)</TD></TR>
+  <TR><TD ALIGN="LEFT">title, category, type</TD><TD ALIGN="LEFT">String (type: LOST | FOUND)</TD></TR>
+  <TR><TD ALIGN="LEFT">description, location, date</TD><TD ALIGN="LEFT">String, String, Date</TD></TR>
+  <TR><TD ALIGN="LEFT">imageUrl, imagePublicId</TD><TD ALIGN="LEFT">String (optional)</TD></TR>
+  <TR><TD ALIGN="LEFT" PORT="rep">reportedBy</TD><TD ALIGN="LEFT">ObjectId → users</TD></TR>
+  <TR><TD ALIGN="LEFT">status</TD><TD ALIGN="LEFT">ACTIVE | RECOVERED</TD></TR>
+  <TR><TD ALIGN="LEFT">submissionId, submissionHash</TD><TD ALIGN="LEFT">String (idempotency)</TD></TR>
+  <TR><TD ALIGN="LEFT">createdAt, updatedAt</TD><TD ALIGN="LEFT">Date</TD></TR>
+  <TR><TD COLSPAN="2" CELLPADDING="8">
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" COLOR="#7A8797" BGCOLOR="#F4F6F9">
+      <TR><TD COLSPAN="2" ALIGN="LEFT"><I>claims[ ]</I> (embedded)</TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="cby">claimedBy</TD><TD ALIGN="LEFT">ObjectId → users</TD></TR>
+      <TR><TD ALIGN="LEFT">description (private), status</TD><TD ALIGN="LEFT">PENDING | APPROVED | REJECTED</TD></TR>
+      <TR><TD ALIGN="LEFT">rejectionReason, requestId</TD><TD ALIGN="LEFT">String (optional)</TD></TR>
+    </TABLE>
+  </TD></TR>
+</TABLE>>];
+
+  // users is drawn on the left, items on the right; every reference crosses the gap between them.
+  users:id:e    -> items:rep:w [dir=back, label="items.reportedBy"];
+  users:id:e    -> items:cby:w [dir=back, style=dashed, label="claims[].claimedBy"];
+  users:nitem:e -> items:id:w  [style=dotted, label="notifications[].relatedItem"];
+}

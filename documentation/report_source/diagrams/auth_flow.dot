@@ -1,0 +1,28 @@
+// Figure: Authentication and role-based access workflow
+digraph auth {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=16, nodesep=0.35, ranksep=0.3, pad=0.12];
+  node  [fontname="Helvetica", fontsize=15, shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#1F3A5F", penwidth=1.2, margin="0.13,0.06"];
+  edge  [fontname="Helvetica", fontsize=14, color="#4A5568", fontcolor="#2D3748", penwidth=1.1, arrowsize=0.8];
+
+  saved   [label="App opens: token saved\nin Secure Store?", shape=diamond, fillcolor="white", margin="0.02,0.02"];
+  me      [label="GET /api/auth/me\n(token check)"];
+  login   [label="Login / Register screen"];
+  server  [label="POST /api/auth/login or /register: server\nvalidates input, checks or creates the bcrypt hash\n(10 rounds), signs a JWT valid for 7 days.\nRegistration always creates a STUDENT.\nThe app stores the token in Secure Store."];
+  role    [label="Role in\nserver reply", shape=diamond, fillcolor="white", margin="0.02,0.02"];
+  stu     [label="Student tabs\nHome · Browse ·\nReport · My Activity"];
+  adm     [label="Admin tabs\nDashboard · All Reports ·\nClaims"];
+  req     [label="Each API request: requireAuth checks the JWT\nand loads the user; admin routes also run\nrequireAdmin (403 if the role is not ADMIN).\nA 401 reply logs the user out."];
+
+  { rank=same; me; login; }
+  { rank=same; stu; adm; }
+
+  saved -> me    [label="yes"];
+  saved -> login [label="no"];
+  me -> login    [label="invalid"];
+  login -> server -> role;
+  me -> role     [label="valid"];
+  role -> stu    [label="STUDENT"];
+  role -> adm    [label="ADMIN"];
+  stu -> req;
+  adm -> req;
+}

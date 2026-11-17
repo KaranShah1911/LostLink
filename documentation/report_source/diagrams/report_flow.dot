@@ -1,0 +1,38 @@
+// Figure: Report submission workflow (idempotency and image handling)
+digraph report {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=16, nodesep=0.3, ranksep=0.3, pad=0.15];
+  node  [fontname="Helvetica", fontsize=15, shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#1F3A5F", penwidth=1.2, margin="0.13,0.07"];
+  edge  [fontname="Helvetica", fontsize=14, color="#4A5568", fontcolor="#2D3748", penwidth=1.1, arrowsize=0.8];
+
+  form    [label="Student fills the report form\n(optional photo)"];
+  lock    [label="Form locked; POST /api/items\nwith submissionId"];
+  unsure  [label="No reply: keep data,\nphoto and id; retry is safe", fillcolor="white"];
+  sval    [label="requireAuth, Multer checks,\nfield validation"];
+  exists  [label="Already saved\nwith this id?", shape=diamond, fillcolor="white", margin="0.02,0.02"];
+  same    [label="Same\ndetails?", shape=diamond, fillcolor="white", margin="0.02,0.02"];
+  r200    [label="200: saved report returned\n(app shows success)"];
+  r409    [label="409: SUBMISSION\nCONFLICT"];
+  upload  [label="Upload photo to\nCloudinary (if any)"];
+  create  [label="Item.create(...)\nstatus ACTIVE"];
+  dup     [label="Duplicate\nkey error?", shape=diamond, fillcolor="white", margin="0.02,0.02"];
+  clean   [label="Delete the photo\nthis request uploaded"];
+  r201    [label="201: report created"];
+  ok      [label="App: success, clear form,\nnew submissionId", fillcolor="white"];
+
+  { rank=same; lock; unsure; }
+  { rank=same; exists; same; }
+  { rank=same; upload; r200; r409; }
+  { rank=same; dup; clean; }
+
+  form -> lock -> sval -> exists;
+  lock -> unsure  [style=dashed, label="no reply"];
+  exists -> same  [label=" yes"];
+  exists -> upload[label=" no"];
+  same -> r200    [label=" yes"];
+  same -> r409    [label=" no"];
+  upload -> create -> dup;
+  dup -> r201     [label=" no"];
+  dup -> clean    [label=" yes"];
+  clean -> r200   [label="return existing"];
+  r201 -> ok;
+}

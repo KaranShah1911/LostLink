@@ -1,13 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { colors } from '@/constants';
+import { ThemeColors } from '@/constants';
 import { formatTimestamp } from '@/lib/format';
 import type { Item } from '@/types';
 import Button from './Button';
 import ItemCard from './ItemCard';
+import { useTheme } from '@/context/ThemeContext';
 
 /** A report in the admin lists: the normal item card plus reporter email, View Details and Delete. */
 export default function AdminReportCard({ item, deleting, disabled, onDelete }: { item: Item; deleting: boolean; disabled: boolean; onDelete: () => void }) {
+  const { styles } = useTheme(makeStyles);
   const open = () => router.push(`/item/${item._id}`);
   return (
     <ItemCard item={item} showStatus showReporter onPress={open}>
@@ -24,8 +26,9 @@ export default function AdminReportCard({ item, deleting, disabled, onDelete }: 
   );
 }
 
-const styles = StyleSheet.create({
-  footer: { flex: 1, gap: 8 },
-  meta: { fontSize: 12, color: colors.muted },
-  actions: { flexDirection: 'row', gap: 8 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    footer: { flex: 1, gap: 8 },
+    meta: { fontSize: 12, color: colors.muted },
+    actions: { flexDirection: 'row', gap: 8 },
+  });

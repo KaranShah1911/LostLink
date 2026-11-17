@@ -1,23 +1,26 @@
 import { ColorValue, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/constants';
-import HeaderAvatar from './HeaderAvatar';
+import { ThemeColors } from '@/constants';
+import HeaderActions from './HeaderActions';
+import { useTheme } from '@/context/ThemeContext';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
-/** Look shared by the student and admin tab bars: navy header with the profile avatar on the right. */
-export const tabScreenOptions = {
-  headerStyle: { backgroundColor: colors.navy },
+/** Look shared by the student and admin tab bars: coloured header with the bell and avatar on the right. */
+export function tabScreenOptions(colors: ThemeColors, showBell: boolean) {
+  return {
+  headerStyle: { backgroundColor: colors.primary },
   headerTintColor: colors.white,
   headerTitleStyle: { fontWeight: '800' as const },
   headerTitleAlign: 'left' as const,
-  headerRight: () => <HeaderAvatar />,
-  tabBarActiveTintColor: colors.teal,
+  headerRight: () => <HeaderActions showBell={showBell} />,
+  tabBarActiveTintColor: colors.secondary,
   tabBarInactiveTintColor: colors.muted,
   tabBarStyle: { backgroundColor: colors.white, borderTopColor: colors.border },
   tabBarLabelStyle: { fontSize: 11, fontWeight: '700' as const },
   sceneStyle: { backgroundColor: colors.background },
-};
+  };
+}
 
 /** Outline icon normally, filled icon when the tab is selected. */
 export function tabIcon(name: IconName, activeName: IconName) {
@@ -29,6 +32,7 @@ export function tabIcon(name: IconName, activeName: IconName) {
 
 /** The highlighted coral "+" used for the student's Report tab. */
 export function ReportTabIcon() {
+  const { colors, styles } = useTheme(makeStyles);
   return (
     <View style={styles.report}>
       <Ionicons name="add" size={30} color={colors.white} />
@@ -38,10 +42,11 @@ export function ReportTabIcon() {
 
 /** "LostLink" with its logo, shown as the header title on the two landing screens. */
 export function BrandTitle({ subtitle }: { subtitle?: string }) {
+  const { colors, styles } = useTheme(makeStyles);
   return (
     <View style={styles.brandRow}>
       <View style={styles.brandIcon}>
-        <Ionicons name="link" size={18} color={colors.navy} />
+        <Ionicons name="link" size={18} color={colors.primary} />
       </View>
       <View>
         <Text style={styles.brand}>LostLink</Text>
@@ -51,28 +56,29 @@ export function BrandTitle({ subtitle }: { subtitle?: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  report: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: colors.coral,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -18, // lifts the button above the tab bar
-    borderWidth: 4,
-    borderColor: colors.white,
-    elevation: 4,
-  },
-  brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  brandIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    backgroundColor: colors.turquoise,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brand: { fontSize: 20, fontWeight: '800', color: colors.white },
-  subtitle: { fontSize: 10, fontWeight: '800', color: colors.turquoise, letterSpacing: 1.5 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    report: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+      backgroundColor: colors.coral,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: -18, // lifts the button above the tab bar
+      borderWidth: 4,
+      borderColor: colors.white,
+      elevation: 4,
+    },
+    brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    brandIcon: {
+      width: 32,
+      height: 32,
+      borderRadius: 10,
+      backgroundColor: colors.highlight,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    brand: { fontSize: 20, fontWeight: '800', color: colors.white },
+    subtitle: { fontSize: 10, fontWeight: '800', color: colors.highlight, letterSpacing: 1.5 },
+  });

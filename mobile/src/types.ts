@@ -1,3 +1,5 @@
+import type { ThemeId } from '@/constants';
+
 export type UserRole = 'STUDENT' | 'ADMIN';
 export type ItemType = 'LOST' | 'FOUND';
 export type ItemStatus = 'ACTIVE' | 'RECOVERED';
@@ -9,6 +11,7 @@ export interface User {
   email: string;
   role: UserRole;
   profileImage: string | null;
+  selectedTheme: ThemeId;
   createdAt: string;
 }
 
@@ -39,7 +42,7 @@ export interface Item {
 /** GET /items/:id — the item plus the viewer's own claim and, for the reporter, the pending count. */
 export interface ItemDetails {
   item: Item;
-  myClaim: { _id: string; status: ClaimStatus; rejectionReason: string | null; createdAt: string } | null;
+  myClaim: { _id: string; status: ClaimStatus; rejectionReason: string | null; createdAt: string; updatedAt: string } | null;
   pendingClaimCount: number | null;
 }
 
@@ -66,6 +69,7 @@ export interface MyClaim {
   status: ClaimStatus;
   rejectionReason: string | null;
   createdAt: string;
+  updatedAt: string;
   item: {
     _id: string;
     title: string;
@@ -91,6 +95,38 @@ export interface AdminStats {
   activeLost: number;
   activeFound: number;
   recovered: number;
+  reportsThisWeek: number;
+  pendingClaims: number;
+}
+
+export interface ItemStats {
+  activeLost: number;
+  activeFound: number;
+  recovered: number;
+}
+
+export type NotificationType = 'CLAIM_RECEIVED' | 'CLAIM_APPROVED' | 'CLAIM_REJECTED' | 'CLAIM_CLOSED' | 'REPORT_REMOVED';
+
+export interface AppNotification {
+  _id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  relatedItem?: string;
+  relatedClaim?: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
+/** Browse filters. Every field is optional and they can be combined. */
+export interface ItemFilters {
+  type?: 'ALL' | ItemType;
+  category?: string;
+  location?: string;
+  q?: string;
+  reported?: '1d' | '7d' | '30d';
+  status?: ItemStatus;
+  sort?: 'newest' | 'oldest';
 }
 
 /** An image chosen with the image picker, ready to be uploaded. */

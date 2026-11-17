@@ -1,0 +1,199 @@
+<svg width="821pt" height="705pt"
+ viewBox="0.00 0.00 821.00 705.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(10.8 693.82)">
+<title>architecture</title>
+<polygon fill="white" stroke="none" points="-10.8,10.8 -10.8,-693.82 809.8,-693.82 809.8,10.8 -10.8,10.8"/>
+<g id="clust1" class="cluster">
+<title>cluster_users</title>
+<path fill="none" stroke="#9aa5b1" d="M247,-594.62C247,-594.62 441,-594.62 441,-594.62 447,-594.62 453,-600.62 453,-606.62 453,-606.62 453,-663.02 453,-663.02 453,-669.02 447,-675.02 441,-675.02 441,-675.02 247,-675.02 247,-675.02 241,-675.02 235,-669.02 235,-663.02 235,-663.02 235,-606.62 235,-606.62 235,-600.62 241,-594.62 247,-594.62"/>
+<text xml:space="preserve" text-anchor="middle" x="344" y="-655.72" font-family="Helvetica,sans-Serif" font-size="17.00" fill="#1f3a5f">Users</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_mobile</title>
+<path fill="none" stroke="#1f3a5f" d="M20,-389.38C20,-389.38 736,-389.38 736,-389.38 742,-389.38 748,-395.38 748,-401.38 748,-401.38 748,-565.62 748,-565.62 748,-571.62 742,-577.62 736,-577.62 736,-577.62 20,-577.62 20,-577.62 14,-577.62 8,-571.62 8,-565.62 8,-565.62 8,-401.38 8,-401.38 8,-395.38 14,-389.38 20,-389.38"/>
+<text xml:space="preserve" text-anchor="middle" x="540.87" y="-558.32" font-family="Helvetica,sans-Serif" font-size="17.00" fill="#1f3a5f">Mobile application (React Native + Expo, TypeScript)</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_backend</title>
+<path fill="none" stroke="#1f3a5f" d="M226,-167.34C226,-167.34 779,-167.34 779,-167.34 785,-167.34 791,-173.34 791,-179.34 791,-179.34 791,-327.78 791,-327.78 791,-333.78 785,-339.78 779,-339.78 779,-339.78 226,-339.78 226,-339.78 220,-339.78 214,-333.78 214,-327.78 214,-327.78 214,-179.34 214,-179.34 214,-173.34 220,-167.34 226,-167.34"/>
+<text xml:space="preserve" text-anchor="middle" x="604.19" y="-320.48" font-family="Helvetica,sans-Serif" font-size="17.00" fill="#1f3a5f">Backend API (Node.js + Express 5, TypeScript)</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_cloud</title>
+<path fill="none" stroke="#9aa5b1" d="M395,-8C395,-8 761,-8 761,-8 767,-8 773,-14 773,-20 773,-20 773,-105.74 773,-105.74 773,-111.74 767,-117.74 761,-117.74 761,-117.74 395,-117.74 395,-117.74 389,-117.74 383,-111.74 383,-105.74 383,-105.74 383,-20 383,-20 383,-14 389,-8 395,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="578" y="-98.44" font-family="Helvetica,sans-Serif" font-size="17.00" fill="#1f3a5f">Cloud services</text>
+</g>
+<!-- student -->
+<g id="node1" class="node">
+<title>student</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M302.93,-638.62C302.93,-638.62 255.07,-638.62 255.07,-638.62 249.07,-638.62 243.07,-632.62 243.07,-626.62 243.07,-626.62 243.07,-614.62 243.07,-614.62 243.07,-608.62 249.07,-602.62 255.07,-602.62 255.07,-602.62 302.93,-602.62 302.93,-602.62 308.93,-602.62 314.93,-608.62 314.93,-614.62 314.93,-614.62 314.93,-626.62 314.93,-626.62 314.93,-632.62 308.93,-638.62 302.93,-638.62"/>
+<text xml:space="preserve" text-anchor="middle" x="279" y="-616.12" font-family="Helvetica,sans-Serif" font-size="15.00">Student</text>
+</g>
+<!-- screens -->
+<g id="node3" class="node">
+<title>screens</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M431.88,-541.22C431.88,-541.22 258.12,-541.22 258.12,-541.22 252.12,-541.22 246.12,-535.22 246.12,-529.22 246.12,-529.22 246.12,-505.7 246.12,-505.7 246.12,-499.7 252.12,-493.7 258.12,-493.7 258.12,-493.7 431.88,-493.7 431.88,-493.7 437.88,-493.7 443.88,-499.7 443.88,-505.7 443.88,-505.7 443.88,-529.22 443.88,-529.22 443.88,-535.22 437.88,-541.22 431.88,-541.22"/>
+<text xml:space="preserve" text-anchor="middle" x="345" y="-521.96" font-family="Helvetica,sans-Serif" font-size="15.00">Expo Router screens</text>
+<text xml:space="preserve" text-anchor="middle" x="345" y="-503.96" font-family="Helvetica,sans-Serif" font-size="15.00">(student tabs / admin tabs)</text>
+</g>
+<!-- student&#45;&gt;screens -->
+<g id="edge1" class="edge">
+<title>student&#45;&gt;screens</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M290.2,-602.46C299.64,-587.99 313.39,-566.92 324.75,-549.5"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="326.84,-551.41 328.87,-543.18 322.15,-548.35 326.84,-551.41"/>
+</g>
+<!-- admin -->
+<g id="node2" class="node">
+<title>admin</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M433.26,-638.62C433.26,-638.62 348.74,-638.62 348.74,-638.62 342.74,-638.62 336.74,-632.62 336.74,-626.62 336.74,-626.62 336.74,-614.62 336.74,-614.62 336.74,-608.62 342.74,-602.62 348.74,-602.62 348.74,-602.62 433.26,-602.62 433.26,-602.62 439.26,-602.62 445.26,-608.62 445.26,-614.62 445.26,-614.62 445.26,-626.62 445.26,-626.62 445.26,-632.62 439.26,-638.62 433.26,-638.62"/>
+<text xml:space="preserve" text-anchor="middle" x="391" y="-616.12" font-family="Helvetica,sans-Serif" font-size="15.00">Administrator</text>
+</g>
+<!-- admin&#45;&gt;screens -->
+<g id="edge2" class="edge">
+<title>admin&#45;&gt;screens</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M383.2,-602.46C376.74,-588.25 367.38,-567.67 359.54,-550.44"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="362.16,-549.43 356.3,-543.3 357.06,-551.74 362.16,-549.43"/>
+</g>
+<!-- ctx -->
+<g id="node5" class="node">
+<title>ctx</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M728.17,-541.22C728.17,-541.22 499.83,-541.22 499.83,-541.22 493.83,-541.22 487.83,-535.22 487.83,-529.22 487.83,-529.22 487.83,-505.7 487.83,-505.7 487.83,-499.7 493.83,-493.7 499.83,-493.7 499.83,-493.7 728.17,-493.7 728.17,-493.7 734.17,-493.7 740.17,-499.7 740.17,-505.7 740.17,-505.7 740.17,-529.22 740.17,-529.22 740.17,-535.22 734.17,-541.22 728.17,-541.22"/>
+<text xml:space="preserve" text-anchor="middle" x="614" y="-521.96" font-family="Helvetica,sans-Serif" font-size="15.00">AuthContext + Secure Store (JWT)</text>
+<text xml:space="preserve" text-anchor="middle" x="614" y="-503.96" font-family="Helvetica,sans-Serif" font-size="15.00">ThemeContext</text>
+</g>
+<!-- screens&#45;&gt;ctx -->
+<g id="edge4" class="edge">
+<title>screens&#45;&gt;ctx</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" stroke-dasharray="5,2" d="M444.3,-517.46C455.52,-517.46 466.74,-517.46 477.96,-517.46"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="477.72,-520.26 485.72,-517.46 477.72,-514.66 477.72,-520.26"/>
+</g>
+<!-- client -->
+<g id="node7" class="node">
+<title>client</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M455.21,-444.9C455.21,-444.9 234.79,-444.9 234.79,-444.9 228.79,-444.9 222.79,-438.9 222.79,-432.9 222.79,-432.9 222.79,-409.38 222.79,-409.38 222.79,-403.38 228.79,-397.38 234.79,-397.38 234.79,-397.38 455.21,-397.38 455.21,-397.38 461.21,-397.38 467.21,-403.38 467.21,-409.38 467.21,-409.38 467.21,-432.9 467.21,-432.9 467.21,-438.9 461.21,-444.9 455.21,-444.9"/>
+<text xml:space="preserve" text-anchor="middle" x="345" y="-425.64" font-family="Helvetica,sans-Serif" font-size="15.00">Axios API client</text>
+<text xml:space="preserve" text-anchor="middle" x="345" y="-407.64" font-family="Helvetica,sans-Serif" font-size="15.00">(Bearer token, idempotency keys)</text>
+</g>
+<!-- screens&#45;&gt;client -->
+<g id="edge5" class="edge">
+<title>screens&#45;&gt;client</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M345,-493.14C345,-481.49 345,-467.21 345,-454.51"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="347.8,-454.85 345,-446.85 342.2,-454.85 347.8,-454.85"/>
+<text xml:space="preserve" text-anchor="middle" x="372.23" y="-465.1" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">API calls</text>
+</g>
+<!-- guards -->
+<g id="node4" class="node">
+<title>guards</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M189.63,-541.22C189.63,-541.22 28.37,-541.22 28.37,-541.22 22.37,-541.22 16.37,-535.22 16.37,-529.22 16.37,-529.22 16.37,-505.7 16.37,-505.7 16.37,-499.7 22.37,-493.7 28.37,-493.7 28.37,-493.7 189.63,-493.7 189.63,-493.7 195.63,-493.7 201.63,-499.7 201.63,-505.7 201.63,-505.7 201.63,-529.22 201.63,-529.22 201.63,-535.22 195.63,-541.22 189.63,-541.22"/>
+<text xml:space="preserve" text-anchor="middle" x="109" y="-521.96" font-family="Helvetica,sans-Serif" font-size="15.00">Role&#45;based route guards</text>
+<text xml:space="preserve" text-anchor="middle" x="109" y="-503.96" font-family="Helvetica,sans-Serif" font-size="15.00">(Stack.Protected)</text>
+</g>
+<!-- guards&#45;&gt;screens -->
+<g id="edge3" class="edge">
+<title>guards&#45;&gt;screens</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" stroke-dasharray="5,2" d="M201.93,-517.46C213.12,-517.46 224.62,-517.46 236.01,-517.46"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="235.87,-520.26 243.87,-517.46 235.87,-514.66 235.87,-520.26"/>
+<text xml:space="preserve" text-anchor="middle" x="223.88" y="-524.66" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">role</text>
+</g>
+<!-- picker -->
+<g id="node6" class="node">
+<title>picker</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M154.02,-444.9C154.02,-444.9 31.98,-444.9 31.98,-444.9 25.98,-444.9 19.98,-438.9 19.98,-432.9 19.98,-432.9 19.98,-409.38 19.98,-409.38 19.98,-403.38 25.98,-397.38 31.98,-397.38 31.98,-397.38 154.02,-397.38 154.02,-397.38 160.02,-397.38 166.02,-403.38 166.02,-409.38 166.02,-409.38 166.02,-432.9 166.02,-432.9 166.02,-438.9 160.02,-444.9 154.02,-444.9"/>
+<text xml:space="preserve" text-anchor="middle" x="93" y="-425.64" font-family="Helvetica,sans-Serif" font-size="15.00">Expo Image Picker</text>
+<text xml:space="preserve" text-anchor="middle" x="93" y="-407.64" font-family="Helvetica,sans-Serif" font-size="15.00">(camera / gallery)</text>
+</g>
+<!-- picker&#45;&gt;client -->
+<g id="edge6" class="edge">
+<title>picker&#45;&gt;client</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" stroke-dasharray="5,2" d="M166.57,-421.14C181.26,-421.14 197.11,-421.14 213.09,-421.14"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="212.84,-423.94 220.84,-421.14 212.84,-418.34 212.84,-423.94"/>
+<text xml:space="preserve" text-anchor="middle" x="194.41" y="-428.34" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">photo</text>
+</g>
+<!-- mw -->
+<g id="node8" class="node">
+<title>mw</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M455.63,-303.38C455.63,-303.38 234.37,-303.38 234.37,-303.38 228.37,-303.38 222.37,-297.38 222.37,-291.38 222.37,-291.38 222.37,-267.86 222.37,-267.86 222.37,-261.86 228.37,-255.86 234.37,-255.86 234.37,-255.86 455.63,-255.86 455.63,-255.86 461.63,-255.86 467.63,-261.86 467.63,-267.86 467.63,-267.86 467.63,-291.38 467.63,-291.38 467.63,-297.38 461.63,-303.38 455.63,-303.38"/>
+<text xml:space="preserve" text-anchor="middle" x="345" y="-284.12" font-family="Helvetica,sans-Serif" font-size="15.00">Middleware</text>
+<text xml:space="preserve" text-anchor="middle" x="345" y="-266.12" font-family="Helvetica,sans-Serif" font-size="15.00">Multer, requireAuth, requireAdmin</text>
+</g>
+<!-- client&#45;&gt;mw -->
+<g id="edge7" class="edge">
+<title>client&#45;&gt;mw</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M345,-396.79C345,-373.91 345,-338.86 345,-313.24"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="347.8,-313.25 345,-305.25 342.2,-313.25 347.8,-313.25"/>
+<text xml:space="preserve" text-anchor="middle" x="430.98" y="-368.78" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> &#160;HTTP JSON / multipart,</text>
+<text xml:space="preserve" text-anchor="middle" x="430.98" y="-351.98" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> &#160;Authorization: Bearer JWT</text>
+</g>
+<!-- routes -->
+<g id="node9" class="node">
+<title>routes</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M770.95,-303.38C770.95,-303.38 523.05,-303.38 523.05,-303.38 517.05,-303.38 511.05,-297.38 511.05,-291.38 511.05,-291.38 511.05,-267.86 511.05,-267.86 511.05,-261.86 517.05,-255.86 523.05,-255.86 523.05,-255.86 770.95,-255.86 770.95,-255.86 776.95,-255.86 782.95,-261.86 782.95,-267.86 782.95,-267.86 782.95,-291.38 782.95,-291.38 782.95,-297.38 776.95,-303.38 770.95,-303.38"/>
+<text xml:space="preserve" text-anchor="middle" x="647" y="-284.12" font-family="Helvetica,sans-Serif" font-size="15.00">Routers</text>
+<text xml:space="preserve" text-anchor="middle" x="647" y="-266.12" font-family="Helvetica,sans-Serif" font-size="15.00">auth · users · items · claims · admin</text>
+</g>
+<!-- mw&#45;&gt;routes -->
+<g id="edge8" class="edge">
+<title>mw&#45;&gt;routes</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M467.98,-279.62C478.98,-279.62 489.98,-279.62 500.97,-279.62"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="500.97,-282.42 508.97,-279.62 500.97,-276.82 500.97,-282.42"/>
+</g>
+<!-- models -->
+<g id="node10" class="node">
+<title>models</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M558.3,-222.86C558.3,-222.86 421.7,-222.86 421.7,-222.86 415.7,-222.86 409.7,-216.86 409.7,-210.86 409.7,-210.86 409.7,-187.34 409.7,-187.34 409.7,-181.34 415.7,-175.34 421.7,-175.34 421.7,-175.34 558.3,-175.34 558.3,-175.34 564.3,-175.34 570.3,-181.34 570.3,-187.34 570.3,-187.34 570.3,-210.86 570.3,-210.86 570.3,-216.86 564.3,-222.86 558.3,-222.86"/>
+<text xml:space="preserve" text-anchor="middle" x="490" y="-203.6" font-family="Helvetica,sans-Serif" font-size="15.00">Mongoose models</text>
+<text xml:space="preserve" text-anchor="middle" x="490" y="-185.6" font-family="Helvetica,sans-Serif" font-size="15.00">User, Item &#160;+ &#160;notify()</text>
+</g>
+<!-- routes&#45;&gt;models -->
+<g id="edge9" class="edge">
+<title>routes&#45;&gt;models</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M600.32,-255.27C582.84,-246.53 562.83,-236.52 544.69,-227.45"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="546.4,-225.17 537.99,-224.1 543.89,-230.18 546.4,-225.17"/>
+</g>
+<!-- cloudlib -->
+<g id="node11" class="node">
+<title>cloudlib</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M730.86,-222.86C730.86,-222.86 617.14,-222.86 617.14,-222.86 611.14,-222.86 605.14,-216.86 605.14,-210.86 605.14,-210.86 605.14,-187.34 605.14,-187.34 605.14,-181.34 611.14,-175.34 617.14,-175.34 617.14,-175.34 730.86,-175.34 730.86,-175.34 736.86,-175.34 742.86,-181.34 742.86,-187.34 742.86,-187.34 742.86,-210.86 742.86,-210.86 742.86,-216.86 736.86,-222.86 730.86,-222.86"/>
+<text xml:space="preserve" text-anchor="middle" x="674" y="-203.6" font-family="Helvetica,sans-Serif" font-size="15.00">Cloudinary helper</text>
+<text xml:space="preserve" text-anchor="middle" x="674" y="-185.6" font-family="Helvetica,sans-Serif" font-size="15.00">(upload / delete)</text>
+</g>
+<!-- routes&#45;&gt;cloudlib -->
+<g id="edge10" class="edge">
+<title>routes&#45;&gt;cloudlib</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M654.95,-255.49C657.46,-248.2 660.27,-240.02 662.95,-232.23"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="665.51,-233.39 665.47,-224.91 660.22,-231.57 665.51,-233.39"/>
+</g>
+<!-- atlas -->
+<g id="node12" class="node">
+<title>atlas</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M570.69,-75.4C570.69,-78.68 530.49,-81.34 481,-81.34 431.51,-81.34 391.31,-78.68 391.31,-75.4 391.31,-75.4 391.31,-21.94 391.31,-21.94 391.31,-18.66 431.51,-16 481,-16 530.49,-16 570.69,-18.66 570.69,-21.94 570.69,-21.94 570.69,-75.4 570.69,-75.4"/>
+<path fill="none" stroke="#1f3a5f" stroke-width="1.2" d="M570.69,-75.4C570.69,-72.12 530.49,-69.46 481,-69.46 431.51,-69.46 391.31,-72.12 391.31,-75.4"/>
+<text xml:space="preserve" text-anchor="middle" x="481" y="-53.17" font-family="Helvetica,sans-Serif" font-size="15.00">MongoDB Atlas</text>
+<text xml:space="preserve" text-anchor="middle" x="481" y="-35.17" font-family="Helvetica,sans-Serif" font-size="15.00">collections: users, items</text>
+</g>
+<!-- models&#45;&gt;atlas -->
+<g id="edge11" class="edge">
+<title>models&#45;&gt;atlas</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M488.59,-174.91C487.24,-152.61 485.17,-118.42 483.53,-91.38"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="486.33,-91.26 483.05,-83.45 480.74,-91.6 486.33,-91.26"/>
+<text xml:space="preserve" text-anchor="middle" x="535.06" y="-146.74" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">queries,</text>
+<text xml:space="preserve" text-anchor="middle" x="535.06" y="-129.94" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">atomic updates</text>
+</g>
+<!-- cloud -->
+<g id="node13" class="node">
+<title>cloud</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M764.96,-75.4C764.96,-78.68 726.43,-81.34 679,-81.34 631.57,-81.34 593.04,-78.68 593.04,-75.4 593.04,-75.4 593.04,-21.94 593.04,-21.94 593.04,-18.66 631.57,-16 679,-16 726.43,-16 764.96,-18.66 764.96,-21.94 764.96,-21.94 764.96,-75.4 764.96,-75.4"/>
+<path fill="none" stroke="#1f3a5f" stroke-width="1.2" d="M764.96,-75.4C764.96,-72.12 726.43,-69.46 679,-69.46 631.57,-69.46 593.04,-72.12 593.04,-75.4"/>
+<text xml:space="preserve" text-anchor="middle" x="679" y="-53.17" font-family="Helvetica,sans-Serif" font-size="15.00">Cloudinary</text>
+<text xml:space="preserve" text-anchor="middle" x="679" y="-35.17" font-family="Helvetica,sans-Serif" font-size="15.00">item and profile photos</text>
+</g>
+<!-- cloudlib&#45;&gt;cloud -->
+<g id="edge12" class="edge">
+<title>cloudlib&#45;&gt;cloud</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M674.78,-174.91C675.53,-152.61 676.68,-118.42 677.59,-91.38"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="680.39,-91.54 677.86,-83.45 674.79,-91.35 680.39,-91.54"/>
+<text xml:space="preserve" text-anchor="middle" x="701.26" y="-146.74" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">upload /</text>
+<text xml:space="preserve" text-anchor="middle" x="701.26" y="-129.94" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">destroy</text>
+</g>
+</g>
+</svg>

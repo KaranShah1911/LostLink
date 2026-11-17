@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import Button from '@/components/Button';
+import ClaimTracker from '@/components/ClaimTracker';
 import ItemImage from '@/components/ItemImage';
 import StatusBadge from '@/components/StatusBadge';
 import { EmptyState, ErrorState, Loading } from '@/components/StateViews';
@@ -9,17 +10,14 @@ import { claimsApi } from '@/lib/api';
 import { openEmail } from '@/lib/email';
 import { formatTimestamp } from '@/lib/format';
 import { useFocusData } from '@/lib/useFocusData';
-import { cardShadow, colors, radius, STATUS_COLORS } from '@/constants';
+import { cardShadow, radius, ThemeColors } from '@/constants';
 import type { MyClaim } from '@/types';
+import { useTheme } from '@/context/ThemeContext';
 
-const STATUS_MESSAGES = {
-  PENDING: 'Waiting for the finder to review your claim.',
-  APPROVED: 'The finder approved your ownership claim. Email them to arrange the hand-over.',
-  REJECTED: 'Your claim was not accepted.',
-};
 
 /** My Activity → My Claims: claims I submitted and what happened to them. */
 export default function MyClaimsList() {
+  const { colors, styles } = useTheme(makeStyles);
   const fetchMine = useCallback(() => claimsApi.mine(), []);
   const { data: claims, loading, error, refreshing, refresh, retry } = useFocusData(fetchMine);
 
@@ -49,8 +47,8 @@ export default function MyClaimsList() {
 }
 
 function MyClaimCard({ claim }: { claim: MyClaim }) {
+  const { styles } = useTheme(makeStyles);
   const finder = claim.item.reportedBy;
-  const statusColor = STATUS_COLORS[claim.status];
 
   return (
     <View style={styles.card}>
@@ -65,11 +63,9 @@ function MyClaimCard({ claim }: { claim: MyClaim }) {
         </View>
       </Pressable>
 
-      <View style={[styles.message, { backgroundColor: statusColor.bg }]}>
-        <Text style={styles.messageText}>{STATUS_MESSAGES[claim.status]}</Text>
-        {claim.status === 'REJECTED' && !!claim.rejectionReason && (
-          <Text style={[styles.messageText, styles.reason]}>Reason: {claim.rejectionReason}</Text>
-        )}
+      {/* Progress timeline, built from the claim's real status and dates in MongoDB. */}
+      <View style={styles.tracker}>
+        <ClaimTracker status={claim.status} createdAt={claim.createdAt} updatedAt={claim.updatedAt} rejectionReason={claim.rejectionReason} />
       </View>
 
       {claim.status === 'APPROVED' && finder?.email && (
@@ -92,22 +88,24 @@ function MyClaimCard({ claim }: { claim: MyClaim }) {
   );
 }
 
-const styles = StyleSheet.create({
-  list: { padding: 16, flexGrow: 1 },
-  card: {
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.purple,
-    padding: 12,
-    marginBottom: 12,
-    ...cardShadow,
-  },
-  row: { flexDirection: 'row', gap: 12 },
-  thumb: { width: 72, height: 72, borderRadius: radius.md },
-  title: { fontSize: 16, fontWeight: '700', color: colors.text },
-  meta: { fontSize: 13, color: colors.muted },
-  message: { marginTop: 12, padding: 10, borderRadius: radius.sm },
-  messageText: { fontSize: 13, color: colors.text, lineHeight: 19 },
-  reason: { marginTop: 4, fontWeight: '700' },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    list: { padding: 16, flexGrow: 1 },
+    card: {
+      backgroundColor: colors.card,
+      borderRadius: radius.lg,
+      borderLeftWidth: 4,
+      borderLeftColor: colors.purple,
+      padding: 12,
+      marginBottom: 12,
+      ...cardShadow,
+    },
+    row: { flexDirection: 'row', gap: 12 },
+    thumb: { width: 72, height: 72, borderRadius: radius.md },
+    title: { fontSize: 16, fontWeight: '700', color: colors.text },
+    meta: { fontSize: 13, color: colors.muted },
+    tracker: { marginTop: 14, paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.border },
+    message: { marginTop: 12, padding: 10, borderRadius: radius.sm },
+    messageText: { fontSize: 13, color: colors.text, lineHeight: 19 },
+    reason: { marginTop: 4, fontWeight: '700' },
+  });

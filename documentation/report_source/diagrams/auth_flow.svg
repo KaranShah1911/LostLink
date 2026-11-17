@@ -1,0 +1,135 @@
+<svg width="578pt" height="606pt"
+ viewBox="0.00 0.00 578.00 606.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(8.64 597.32)">
+<title>auth</title>
+<polygon fill="white" stroke="none" points="-8.64,8.64 -8.64,-597.32 569.29,-597.32 569.29,8.64 -8.64,8.64"/>
+<!-- saved -->
+<g id="node1" class="node">
+<title>saved</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M261.36,-585.91C261.36,-585.91 120.89,-552.57 120.89,-552.57 115.05,-551.19 115.05,-548.41 120.89,-547.03 120.89,-547.03 261.36,-513.69 261.36,-513.69 267.2,-512.31 278.88,-512.31 284.72,-513.69 284.72,-513.69 425.19,-547.03 425.19,-547.03 431.03,-548.41 431.03,-551.19 425.19,-552.57 425.19,-552.57 284.72,-585.91 284.72,-585.91 278.88,-587.29 267.2,-587.29 261.36,-585.91"/>
+<text xml:space="preserve" text-anchor="middle" x="273.04" y="-554.3" font-family="Helvetica,sans-Serif" font-size="15.00">App opens: token saved</text>
+<text xml:space="preserve" text-anchor="middle" x="273.04" y="-536.3" font-family="Helvetica,sans-Serif" font-size="15.00">in Secure Store?</text>
+</g>
+<!-- me -->
+<g id="node2" class="node">
+<title>me</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M220.18,-472.12C220.18,-472.12 107.9,-472.12 107.9,-472.12 101.9,-472.12 95.9,-466.12 95.9,-460.12 95.9,-460.12 95.9,-439.48 95.9,-439.48 95.9,-433.48 101.9,-427.48 107.9,-427.48 107.9,-427.48 220.18,-427.48 220.18,-427.48 226.18,-427.48 232.18,-433.48 232.18,-439.48 232.18,-439.48 232.18,-460.12 232.18,-460.12 232.18,-466.12 226.18,-472.12 220.18,-472.12"/>
+<text xml:space="preserve" text-anchor="middle" x="164.04" y="-454.3" font-family="Helvetica,sans-Serif" font-size="15.00">GET /api/auth/me</text>
+<text xml:space="preserve" text-anchor="middle" x="164.04" y="-436.3" font-family="Helvetica,sans-Serif" font-size="15.00">(token check)</text>
+</g>
+<!-- saved&#45;&gt;me -->
+<g id="edge1" class="edge">
+<title>saved&#45;&gt;me</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M239.45,-518.6C225.38,-505.95 209.13,-491.34 195.33,-478.93"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="197.41,-477.04 189.59,-473.77 193.67,-481.2 197.41,-477.04"/>
+<text xml:space="preserve" text-anchor="middle" x="229.43" y="-487.32" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">yes</text>
+</g>
+<!-- login -->
+<g id="node3" class="node">
+<title>login</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M457.52,-467.8C457.52,-467.8 308.56,-467.8 308.56,-467.8 302.56,-467.8 296.56,-461.8 296.56,-455.8 296.56,-455.8 296.56,-443.8 296.56,-443.8 296.56,-437.8 302.56,-431.8 308.56,-431.8 308.56,-431.8 457.52,-431.8 457.52,-431.8 463.52,-431.8 469.52,-437.8 469.52,-443.8 469.52,-443.8 469.52,-455.8 469.52,-455.8 469.52,-461.8 463.52,-467.8 457.52,-467.8"/>
+<text xml:space="preserve" text-anchor="middle" x="383.04" y="-445.3" font-family="Helvetica,sans-Serif" font-size="15.00">Login / Register screen</text>
+</g>
+<!-- saved&#45;&gt;login -->
+<g id="edge2" class="edge">
+<title>saved&#45;&gt;login</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M306.94,-518.6C322.89,-504.39 341.63,-487.69 356.52,-474.43"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="358.14,-476.73 362.25,-469.32 354.41,-472.55 358.14,-476.73"/>
+<text xml:space="preserve" text-anchor="middle" x="352.11" y="-487.32" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">no</text>
+</g>
+<!-- me&#45;&gt;login -->
+<g id="edge3" class="edge">
+<title>me&#45;&gt;login</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M232.73,-449.8C249.82,-449.8 268.46,-449.8 286.61,-449.8"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="286.39,-452.6 294.39,-449.8 286.39,-447 286.39,-452.6"/>
+<text xml:space="preserve" text-anchor="middle" x="264.37" y="-457" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">invalid</text>
+</g>
+<!-- role -->
+<g id="node5" class="node">
+<title>role</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M164.22,-277.66C164.22,-277.66 104.63,-249.14 104.63,-249.14 99.22,-246.55 99.22,-241.37 104.63,-238.78 104.63,-238.78 164.22,-210.26 164.22,-210.26 169.63,-207.67 180.45,-207.67 185.86,-210.26 185.86,-210.26 245.45,-238.78 245.45,-238.78 250.86,-241.37 250.86,-246.55 245.45,-249.14 245.45,-249.14 185.86,-277.66 185.86,-277.66 180.45,-280.25 169.63,-280.25 164.22,-277.66"/>
+<text xml:space="preserve" text-anchor="middle" x="175.04" y="-248.46" font-family="Helvetica,sans-Serif" font-size="15.00">Role in</text>
+<text xml:space="preserve" text-anchor="middle" x="175.04" y="-230.46" font-family="Helvetica,sans-Serif" font-size="15.00">server reply</text>
+</g>
+<!-- me&#45;&gt;role -->
+<g id="edge6" class="edge">
+<title>me&#45;&gt;role</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M165.22,-426.99C166.94,-394.97 170.21,-334.47 172.5,-292.03"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="175.29,-292.27 172.93,-284.13 169.7,-291.97 175.29,-292.27"/>
+<text xml:space="preserve" text-anchor="middle" x="186.08" y="-350.96" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">valid</text>
+</g>
+<!-- server -->
+<g id="node4" class="node">
+<title>server</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M548.65,-404.48C548.65,-404.48 225.43,-404.48 225.43,-404.48 219.43,-404.48 213.43,-398.48 213.43,-392.48 213.43,-392.48 213.43,-317.84 213.43,-317.84 213.43,-311.84 219.43,-305.84 225.43,-305.84 225.43,-305.84 548.65,-305.84 548.65,-305.84 554.65,-305.84 560.65,-311.84 560.65,-317.84 560.65,-317.84 560.65,-392.48 560.65,-392.48 560.65,-398.48 554.65,-404.48 548.65,-404.48"/>
+<text xml:space="preserve" text-anchor="middle" x="387.04" y="-386.66" font-family="Helvetica,sans-Serif" font-size="15.00">POST /api/auth/login or /register: server</text>
+<text xml:space="preserve" text-anchor="middle" x="387.04" y="-368.66" font-family="Helvetica,sans-Serif" font-size="15.00">validates input, checks or creates the bcrypt hash</text>
+<text xml:space="preserve" text-anchor="middle" x="387.04" y="-350.66" font-family="Helvetica,sans-Serif" font-size="15.00">(10 rounds), signs a JWT valid for 7 days.</text>
+<text xml:space="preserve" text-anchor="middle" x="387.04" y="-332.66" font-family="Helvetica,sans-Serif" font-size="15.00">Registration always creates a STUDENT.</text>
+<text xml:space="preserve" text-anchor="middle" x="387.04" y="-314.66" font-family="Helvetica,sans-Serif" font-size="15.00">The app stores the token in Secure Store.</text>
+</g>
+<!-- login&#45;&gt;server -->
+<g id="edge4" class="edge">
+<title>login&#45;&gt;server</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M383.79,-431.38C384.01,-426.23 384.27,-420.3 384.54,-414.07"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="387.32,-414.56 384.87,-406.45 381.73,-414.32 387.32,-414.56"/>
+</g>
+<!-- server&#45;&gt;role -->
+<g id="edge5" class="edge">
+<title>server&#45;&gt;role</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M292.2,-305.31C267.99,-292.84 242.99,-279.96 222.33,-269.32"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="223.64,-266.84 215.24,-265.67 221.07,-271.82 223.64,-266.84"/>
+</g>
+<!-- stu -->
+<g id="node6" class="node">
+<title>stu</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M140.08,-166.28C140.08,-166.28 12,-166.28 12,-166.28 6,-166.28 0,-160.28 0,-154.28 0,-154.28 0,-115.64 0,-115.64 0,-109.64 6,-103.64 12,-103.64 12,-103.64 140.08,-103.64 140.08,-103.64 146.08,-103.64 152.08,-109.64 152.08,-115.64 152.08,-115.64 152.08,-154.28 152.08,-154.28 152.08,-160.28 146.08,-166.28 140.08,-166.28"/>
+<text xml:space="preserve" text-anchor="middle" x="76.04" y="-148.46" font-family="Helvetica,sans-Serif" font-size="15.00">Student tabs</text>
+<text xml:space="preserve" text-anchor="middle" x="76.04" y="-130.46" font-family="Helvetica,sans-Serif" font-size="15.00">Home · Browse ·</text>
+<text xml:space="preserve" text-anchor="middle" x="76.04" y="-112.46" font-family="Helvetica,sans-Serif" font-size="15.00">Report · My Activity</text>
+</g>
+<!-- role&#45;&gt;stu -->
+<g id="edge7" class="edge">
+<title>role&#45;&gt;stu</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M150.57,-216.51C138.56,-203.53 123.89,-187.68 110.75,-173.47"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="113.06,-171.85 105.57,-167.88 108.95,-175.65 113.06,-171.85"/>
+<text xml:space="preserve" text-anchor="middle" x="161.56" y="-181.48" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">STUDENT</text>
+</g>
+<!-- adm -->
+<g id="node7" class="node">
+<title>adm</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M359.36,-166.28C359.36,-166.28 188.72,-166.28 188.72,-166.28 182.72,-166.28 176.72,-160.28 176.72,-154.28 176.72,-154.28 176.72,-115.64 176.72,-115.64 176.72,-109.64 182.72,-103.64 188.72,-103.64 188.72,-103.64 359.36,-103.64 359.36,-103.64 365.36,-103.64 371.36,-109.64 371.36,-115.64 371.36,-115.64 371.36,-154.28 371.36,-154.28 371.36,-160.28 365.36,-166.28 359.36,-166.28"/>
+<text xml:space="preserve" text-anchor="middle" x="274.04" y="-148.46" font-family="Helvetica,sans-Serif" font-size="15.00">Admin tabs</text>
+<text xml:space="preserve" text-anchor="middle" x="274.04" y="-130.46" font-family="Helvetica,sans-Serif" font-size="15.00">Dashboard · All Reports ·</text>
+<text xml:space="preserve" text-anchor="middle" x="274.04" y="-112.46" font-family="Helvetica,sans-Serif" font-size="15.00">Claims</text>
+</g>
+<!-- role&#45;&gt;adm -->
+<g id="edge8" class="edge">
+<title>role&#45;&gt;adm</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M199.51,-216.51C211.52,-203.53 226.19,-187.68 239.33,-173.47"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="241.13,-175.65 244.51,-167.88 237.02,-171.85 241.13,-175.65"/>
+<text xml:space="preserve" text-anchor="middle" x="255.96" y="-181.48" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">ADMIN</text>
+</g>
+<!-- req -->
+<g id="node8" class="node">
+<title>req</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M328.14,-80.64C328.14,-80.64 19.94,-80.64 19.94,-80.64 13.94,-80.64 7.94,-74.64 7.94,-68.64 7.94,-68.64 7.94,-12 7.94,-12 7.94,-6 13.94,0 19.94,0 19.94,0 328.14,0 328.14,0 334.14,0 340.14,-6 340.14,-12 340.14,-12 340.14,-68.64 340.14,-68.64 340.14,-74.64 334.14,-80.64 328.14,-80.64"/>
+<text xml:space="preserve" text-anchor="middle" x="174.04" y="-62.82" font-family="Helvetica,sans-Serif" font-size="15.00">Each API request: requireAuth checks the JWT</text>
+<text xml:space="preserve" text-anchor="middle" x="174.04" y="-44.82" font-family="Helvetica,sans-Serif" font-size="15.00">and loads the user; admin routes also run</text>
+<text xml:space="preserve" text-anchor="middle" x="174.04" y="-26.82" font-family="Helvetica,sans-Serif" font-size="15.00">requireAdmin (403 if the role is not ADMIN).</text>
+<text xml:space="preserve" text-anchor="middle" x="174.04" y="-8.82" font-family="Helvetica,sans-Serif" font-size="15.00">A 401 reply logs the user out.</text>
+</g>
+<!-- stu&#45;&gt;req -->
+<g id="edge9" class="edge">
+<title>stu&#45;&gt;req</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M108.67,-103.11C113.92,-98.15 119.45,-92.93 124.98,-87.7"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="126.86,-89.77 130.75,-82.24 123.01,-85.7 126.86,-89.77"/>
+</g>
+<!-- adm&#45;&gt;req -->
+<g id="edge10" class="edge">
+<title>adm&#45;&gt;req</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M240.74,-103.11C235.27,-98.04 229.5,-92.69 223.73,-87.35"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="225.97,-85.61 218.2,-82.23 222.16,-89.72 225.97,-85.61"/>
+</g>
+</g>
+</svg>

@@ -1,7 +1,8 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { cardShadow, colors, radius } from '@/constants';
+import { cardShadow, palette, radius, ThemeColors } from '@/constants';
+import { useTheme } from '@/context/ThemeContext';
 
 const OPTIONS = [
   {
@@ -9,20 +10,21 @@ const OPTIONS = [
     title: 'Report Lost Item',
     text: 'You lost something on campus. Describe it so others can help.',
     icon: 'alert-circle',
-    color: colors.coral,
-    bg: colors.coralSoft,
+    color: palette.coral,
+    bg: palette.coralSoft,
   },
   {
     type: 'FOUND',
     title: 'Report Found Item',
     text: 'You found something. Post it so the owner can claim it.',
     icon: 'checkmark-circle',
-    color: colors.green,
-    bg: colors.greenSoft,
+    color: palette.green,
+    bg: palette.greenSoft,
   },
 ] as const;
 
 export default function ReportChoiceScreen() {
+  const { colors, styles } = useTheme(makeStyles);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>What would you like to report?</Text>
@@ -54,23 +56,24 @@ export default function ReportChoiceScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { padding: 16 },
-  heading: { fontSize: 20, fontWeight: '800', color: colors.text, marginBottom: 16 },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    borderLeftWidth: 5,
-    padding: 18,
-    marginBottom: 14,
-    ...cardShadow,
-  },
-  iconCircle: { width: 60, height: 60, borderRadius: 30, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 17, fontWeight: '800', color: colors.text },
-  text: { fontSize: 14, color: colors.muted, marginTop: 4, lineHeight: 20 },
-  tip: { flexDirection: 'row', gap: 10, backgroundColor: colors.amberSoft, padding: 14, borderRadius: radius.md, marginTop: 6 },
-  tipText: { flex: 1, color: colors.text, fontSize: 13, lineHeight: 19 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    container: { padding: 16 },
+    heading: { fontSize: 20, fontWeight: '800', color: colors.text, marginBottom: 16 },
+    card: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 16,
+      backgroundColor: colors.card,
+      borderRadius: radius.lg,
+      borderLeftWidth: 5,
+      padding: 18,
+      marginBottom: 14,
+      ...cardShadow,
+    },
+    iconCircle: { width: 60, height: 60, borderRadius: 30, alignItems: 'center', justifyContent: 'center' },
+    title: { fontSize: 17, fontWeight: '800', color: colors.text },
+    text: { fontSize: 14, color: colors.muted, marginTop: 4, lineHeight: 20 },
+    tip: { flexDirection: 'row', gap: 10, backgroundColor: colors.amberSoft, padding: 14, borderRadius: radius.md, marginTop: 6 },
+    tipText: { flex: 1, color: colors.text, fontSize: 13, lineHeight: 19 },
+  });

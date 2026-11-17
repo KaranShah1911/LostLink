@@ -1,0 +1,52 @@
+// Figure: Overall system architecture of LostLink (rows: users, mobile app, backend, cloud services)
+digraph architecture {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=17, nodesep=0.3, ranksep=0.45, pad=0.15, newrank=true];
+  node  [fontname="Helvetica", fontsize=15, shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#1F3A5F", penwidth=1.2, margin="0.14,0.08"];
+  edge  [fontname="Helvetica", fontsize=14, color="#4A5568", fontcolor="#2D3748", penwidth=1.1, arrowsize=0.8];
+
+  subgraph cluster_users {
+    label="Users"; style="rounded"; color="#9AA5B1"; fontcolor="#1F3A5F";
+    student [label="Student", fillcolor="white"];
+    admin   [label="Administrator", fillcolor="white"];
+  }
+  subgraph cluster_mobile {
+    label="Mobile application (React Native + Expo, TypeScript)"; labeljust=r; style="rounded"; color="#1F3A5F"; fontcolor="#1F3A5F";
+    screens [label="Expo Router screens\n(student tabs / admin tabs)"];
+    guards  [label="Role-based route guards\n(Stack.Protected)"];
+    ctx     [label="AuthContext + Secure Store (JWT)\nThemeContext"];
+    picker  [label="Expo Image Picker\n(camera / gallery)"];
+    client  [label="Axios API client\n(Bearer token, idempotency keys)"];
+  }
+  subgraph cluster_backend {
+    label="Backend API (Node.js + Express 5, TypeScript)"; labeljust=r; style="rounded"; color="#1F3A5F"; fontcolor="#1F3A5F";
+    mw      [label="Middleware\nMulter, requireAuth, requireAdmin"];
+    routes  [label="Routers\nauth · users · items · claims · admin"];
+    models  [label="Mongoose models\nUser, Item  +  notify()"];
+    cloudlib[label="Cloudinary helper\n(upload / delete)"];
+  }
+  subgraph cluster_cloud {
+    label="Cloud services"; style="rounded"; color="#9AA5B1"; fontcolor="#1F3A5F";
+    atlas [label="MongoDB Atlas\ncollections: users, items", shape=cylinder, fillcolor="white"];
+    cloud [label="Cloudinary\nitem and profile photos", shape=cylinder, fillcolor="white"];
+  }
+
+  { rank=same; student; admin; }
+  { rank=same; guards; screens; ctx; }
+  { rank=same; picker; client; }
+  { rank=same; mw; routes; }
+  { rank=same; models; cloudlib; }
+  { rank=same; atlas; cloud; }
+
+  student -> screens;
+  admin   -> screens;
+  guards  -> screens [label="role", style=dashed];
+  screens -> ctx     [style=dashed];
+  screens -> client  [label="API calls"];
+  picker  -> client  [label="photo", style=dashed];
+  client  -> mw      [label="  HTTP JSON / multipart,\n  Authorization: Bearer JWT"];
+  mw      -> routes;
+  routes  -> models;
+  routes  -> cloudlib;
+  models  -> atlas   [label="queries,\natomic updates"];
+  cloudlib-> cloud   [label="upload /\ndestroy"];
+}

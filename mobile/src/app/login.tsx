@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ComponentRef, useRef, useState } from 'react';
+import { Keyboard, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Link } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AuthHeader from '@/components/AuthHeader';
+import AuthBrand from '@/components/AuthBrand';
+import CampusBackdrop from '@/components/CampusBackdrop';
 import Button from '@/components/Button';
 import KeyboardAvoider from '@/components/KeyboardAvoider';
 import TextField from '@/components/TextField';
@@ -11,15 +11,18 @@ import { ErrorBanner } from '@/components/StateViews';
 import { useAuth } from '@/context/AuthContext';
 import { getErrorMessage } from '@/lib/api';
 import { EMAIL_PATTERN } from '@/lib/format';
-import { colors, radius } from '@/constants';
+import { cardShadow, radius, ThemeColors } from '@/constants';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function LoginScreen() {
+  const { styles } = useTheme(makeStyles);
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [serverError, setServerError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const passwordRef = useRef<ComponentRef<typeof TextInput>>(null);
 
   async function handleLogin() {
     const nextErrors: typeof errors = {};
@@ -41,19 +44,12 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={[]}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      {/* Full-screen faded VJTI campus photo behind the form. */}
+      <CampusBackdrop />
       <KeyboardAvoider>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-          <AuthHeader>
-            <View style={styles.hero}>
-              <View style={styles.logo}>
-                <Ionicons name="link" size={32} color={colors.navy} />
-              </View>
-              <Text style={styles.brand}>LostLink</Text>
-              <Text style={styles.campus}>VJTI CAMPUS LOST & FOUND</Text>
-              <Text style={styles.tagline}>Find what matters. Return what belongs.</Text>
-            </View>
-          </AuthHeader>
+          <AuthBrand />
 
           <View style={styles.card}>
             <Text style={styles.heading}>Welcome back</Text>
@@ -69,9 +65,12 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoComplete="email"
               returnKeyType="next"
+              submitBehavior="submit"
+              onSubmitEditing={() => passwordRef.current?.focus()}
               error={errors.email}
             />
             <TextField
+              ref={passwordRef}
               label="Password"
               icon="lock-closed-outline"
               value={password}
@@ -101,34 +100,15 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.navy },
-  scroll: { flexGrow: 1 },
-  hero: { alignItems: 'center', paddingTop: 36, paddingBottom: 30 },
-  logo: {
-    width: 68,
-    height: 68,
-    borderRadius: 22,
-    backgroundColor: colors.turquoise,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-  },
-  // Text shadows keep the white text readable on top of the photo.
-  brand: { fontSize: 34, fontWeight: '800', color: colors.white, letterSpacing: 0.5, textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 6 },
-  campus: { fontSize: 12, fontWeight: '800', color: colors.white, letterSpacing: 2, marginTop: 4, textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 6 },
-  tagline: { fontSize: 15, fontWeight: '600', color: colors.white, marginTop: 10, textAlign: 'center', textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 6 },
-  card: {
-    flex: 1,
-    backgroundColor: colors.background,
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
-    padding: 24,
-    paddingTop: 28,
-  },
-  heading: { fontSize: 24, fontWeight: '800', color: colors.text },
-  subheading: { fontSize: 14, color: colors.muted, marginTop: 4, marginBottom: 22 },
-  footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' },
-  footerText: { color: colors.muted, fontSize: 14 },
-  link: { color: colors.teal, fontWeight: '800', fontSize: 14 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    scroll: { flexGrow: 1, justifyContent: 'center', padding: 20 },
+    // Slightly see-through white card, so the campus photo still shows around the form.
+    card: { backgroundColor: 'rgba(255,255,255,0.94)', borderRadius: radius.xl, padding: 22, ...cardShadow },
+    heading: { fontSize: 24, fontWeight: '800', color: colors.text },
+    subheading: { fontSize: 14, color: colors.muted, marginTop: 4, marginBottom: 22 },
+    footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' },
+    footerText: { color: colors.muted, fontSize: 14 },
+    link: { color: colors.secondary, fontWeight: '800', fontSize: 14 },
+  });

@@ -6,7 +6,8 @@ import Segmented from '@/components/Segmented';
 import { EmptyState, ErrorState, Loading } from '@/components/StateViews';
 import { adminApi } from '@/lib/api';
 import { useFocusData } from '@/lib/useFocusData';
-import { colors, radius } from '@/constants';
+import { radius, ThemeColors } from '@/constants';
+import { useTheme } from '@/context/ThemeContext';
 
 type Filter = 'PENDING' | 'ALL';
 const FILTERS = [
@@ -16,6 +17,7 @@ const FILTERS = [
 
 /** Admin → Claims: read-only moderation view. There are deliberately no Approve / Reject buttons. */
 export default function AdminClaimsScreen() {
+  const { colors, styles } = useTheme(makeStyles);
   const [filter, setFilter] = useState<Filter>('PENDING');
   const fetchClaims = useCallback(() => adminApi.claims(filter), [filter]);
   const { data: claims, loading, error, refreshing, refresh, retry } = useFocusData(fetchClaims);
@@ -59,9 +61,10 @@ export default function AdminClaimsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  controls: { padding: 16, paddingBottom: 4, gap: 10 },
-  note: { flexDirection: 'row', gap: 8, backgroundColor: colors.purpleSoft, padding: 12, borderRadius: radius.md },
-  noteText: { flex: 1, fontSize: 12, color: colors.text, lineHeight: 17 },
-  list: { padding: 16, flexGrow: 1 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    controls: { padding: 16, paddingBottom: 4, gap: 10 },
+    note: { flexDirection: 'row', gap: 8, backgroundColor: colors.purpleSoft, padding: 12, borderRadius: radius.md },
+    noteText: { flex: 1, fontSize: 12, color: colors.text, lineHeight: 17 },
+    list: { padding: 16, flexGrow: 1 },
+  });

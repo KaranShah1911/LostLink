@@ -1,12 +1,13 @@
 import { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { cardShadow, colors, radius, STATUS_COLORS } from '@/constants';
+import { cardShadow, radius, STATUS_COLORS, ThemeColors } from '@/constants';
 import { formatDate } from '@/lib/format';
 import type { Item } from '@/types';
 import CategoryIcon, { categoryColor } from './CategoryIcon';
 import ItemImage from './ItemImage';
 import StatusBadge from './StatusBadge';
+import { useTheme } from '@/context/ThemeContext';
 
 interface ItemCardProps {
   item: Item;
@@ -17,6 +18,7 @@ interface ItemCardProps {
 }
 
 export default function ItemCard({ item, onPress, showStatus, showReporter, children }: ItemCardProps) {
+  const { styles } = useTheme(makeStyles);
   return (
     // The coloured strip on the left repeats the LOST (red) / FOUND (green) colour.
     <View style={[styles.card, { borderLeftColor: STATUS_COLORS[item.type].fg }]}>
@@ -45,6 +47,7 @@ export default function ItemCard({ item, onPress, showStatus, showReporter, chil
 }
 
 function Meta({ icon, text }: { icon: keyof typeof Ionicons.glyphMap; text: string }) {
+  const { colors, styles } = useTheme(makeStyles);
   return (
     <View style={styles.meta}>
       <Ionicons name={icon} size={14} color={colors.muted} />
@@ -55,29 +58,30 @@ function Meta({ icon, text }: { icon: keyof typeof Ionicons.glyphMap; text: stri
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    borderLeftWidth: 4,
-    padding: 12,
-    marginBottom: 12,
-    ...cardShadow,
-  },
-  row: { flexDirection: 'row', gap: 12 },
-  image: { width: 92, height: 92, borderRadius: radius.md },
-  info: { flex: 1, gap: 3 },
-  badges: { flexDirection: 'row', gap: 6, marginBottom: 2 },
-  title: { fontSize: 16, fontWeight: '700', color: colors.text },
-  category: { fontSize: 13, fontWeight: '700' },
-  meta: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  metaText: { fontSize: 13, color: colors.muted, flexShrink: 1 },
-  actions: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.card,
+      borderRadius: radius.lg,
+      borderLeftWidth: 4,
+      padding: 12,
+      marginBottom: 12,
+      ...cardShadow,
+    },
+    row: { flexDirection: 'row', gap: 12 },
+    image: { width: 92, height: 92, borderRadius: radius.md },
+    info: { flex: 1, gap: 3 },
+    badges: { flexDirection: 'row', gap: 6, marginBottom: 2 },
+    title: { fontSize: 16, fontWeight: '700', color: colors.text },
+    category: { fontSize: 13, fontWeight: '700' },
+    meta: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+    metaText: { fontSize: 13, color: colors.muted, flexShrink: 1 },
+    actions: {
+      flexDirection: 'row',
+      gap: 8,
+      marginTop: 12,
+      paddingTop: 12,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+  });

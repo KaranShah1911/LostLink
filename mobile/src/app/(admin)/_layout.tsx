@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router/js-tabs';
+import { useTheme } from '@/context/ThemeContext';
 import { BrandTitle, tabIcon, tabScreenOptions } from '@/components/tabBar';
 
 /**
@@ -7,8 +8,9 @@ import { BrandTitle, tabIcon, tabScreenOptions } from '@/components/tabBar';
  * and the backend checks the role again on every /api/admin request.
  */
 export default function AdminTabsLayout() {
+  const { colors } = useTheme();
   return (
-    <Tabs screenOptions={tabScreenOptions}>
+    <Tabs screenOptions={tabScreenOptions(colors, false)}>
       <Tabs.Screen
         name="dashboard"
         options={{

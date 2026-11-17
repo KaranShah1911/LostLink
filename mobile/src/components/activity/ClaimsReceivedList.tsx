@@ -6,10 +6,13 @@ import { EmptyState, ErrorState, Loading } from '@/components/StateViews';
 import { claimsApi } from '@/lib/api';
 import { useClaimReview } from '@/lib/useClaimReview';
 import { useFocusData } from '@/lib/useFocusData';
-import { colors } from '@/constants';
+import { ThemeColors } from '@/constants';
+import { useTheme } from '@/context/ThemeContext';
+import KeyboardAvoider from '@/components/KeyboardAvoider';
 
 /** My Activity → Claims Received: claims on FOUND items I reported, which only I can approve or reject. */
 export default function ClaimsReceivedList() {
+  const { colors, styles } = useTheme(makeStyles);
   const fetchReceived = useCallback(() => claimsApi.received(), []);
   const { data: claims, loading, error, refreshing, refresh, retry } = useFocusData(fetchReceived);
   const { busyClaimId, approve, reject } = useClaimReview(refresh);
@@ -18,6 +21,8 @@ export default function ClaimsReceivedList() {
   if (error && !claims) return <ErrorState message={error} onRetry={retry} />;
 
   return (
+    // Keeps the rejection note above the keyboard.
+    <KeyboardAvoider>
     <FlatList
       data={claims ?? []}
       keyExtractor={(claim) => claim._id}
@@ -49,9 +54,11 @@ export default function ClaimsReceivedList() {
         />
       )}
     />
+    </KeyboardAvoider>
   );
 }
 
-const styles = StyleSheet.create({
-  list: { padding: 16, flexGrow: 1 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    list: { padding: 16, flexGrow: 1 },
+  });

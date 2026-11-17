@@ -6,11 +6,13 @@ import ItemCard from '@/components/ItemCard';
 import { EmptyState, ErrorState, Loading } from '@/components/StateViews';
 import { getErrorMessage, itemsApi } from '@/lib/api';
 import { useFocusData } from '@/lib/useFocusData';
-import { colors } from '@/constants';
+import { ThemeColors } from '@/constants';
 import type { Item } from '@/types';
+import { useTheme } from '@/context/ThemeContext';
 
 /** My Activity → My Reports: everything the student has reported, active and recovered. */
 export default function MyReportsList() {
+  const { colors, styles } = useTheme(makeStyles);
   const fetchMine = useCallback(() => itemsApi.mine(), []);
   const { data: items, setData, loading, error, refreshing, refresh, retry } = useFocusData(fetchMine);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -64,7 +66,7 @@ export default function MyReportsList() {
       data={items ?? []}
       keyExtractor={(item) => item._id}
       contentContainerStyle={styles.list}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} colors={[colors.teal]} />}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} colors={[colors.secondary]} />}
       ListEmptyComponent={
         <EmptyState
           icon="document-text-outline"
@@ -122,8 +124,9 @@ export default function MyReportsList() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: { padding: 16, flexGrow: 1 },
-  actions: { flex: 1, flexDirection: 'row', gap: 8 },
-  recovered: { color: '#3F7A56', fontWeight: '600', fontSize: 13 },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    list: { padding: 16, flexGrow: 1 },
+    actions: { flex: 1, flexDirection: 'row', gap: 8 },
+    recovered: { color: '#3F7A56', fontWeight: '600', fontSize: 13 },
+  });

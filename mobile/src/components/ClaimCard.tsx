@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { cardShadow, colors, radius } from '@/constants';
+import { cardShadow, radius, ThemeColors } from '@/constants';
 import { openEmail } from '@/lib/email';
 import { formatTimestamp } from '@/lib/format';
 import type { Claim } from '@/types';
@@ -9,6 +9,7 @@ import Avatar from './Avatar';
 import Button from './Button';
 import ItemImage from './ItemImage';
 import StatusBadge from './StatusBadge';
+import { useTheme } from '@/context/ThemeContext';
 
 interface ClaimCardProps {
   claim: Claim;
@@ -22,6 +23,7 @@ interface ClaimCardProps {
 
 /** A claim as seen by the item's reporter, with Approve / Reject buttons while it is pending. */
 export default function ClaimCard({ claim, itemTitle, item, canReview, busy, onApprove, onReject }: ClaimCardProps) {
+  const { colors, styles } = useTheme(makeStyles);
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
   const claimant = claim.claimedBy;
@@ -86,6 +88,8 @@ export default function ClaimCard({ claim, itemTitle, item, canReview, busy, onA
             value={reason}
             onChangeText={setReason}
             placeholder="Reason for rejecting (optional)"
+            autoFocus
+            editable={!busy}
             placeholderTextColor="#94A3B8"
             maxLength={300}
             multiline
@@ -109,51 +113,52 @@ export default function ClaimCard({ claim, itemTitle, item, canReview, busy, onA
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.purple, // purple = claims
-    padding: 14,
-    marginBottom: 12,
-    ...cardShadow,
-  },
-  itemRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingBottom: 12,
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  thumb: { width: 38, height: 38, borderRadius: radius.sm },
-  itemTitle: { flex: 1, fontWeight: '700', color: colors.purple, fontSize: 15 },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
-  name: { fontSize: 15, fontWeight: '700', color: colors.text },
-  date: { fontSize: 12, color: colors.muted, marginTop: 2 },
-  label: { fontSize: 11, fontWeight: '800', color: colors.purple, marginBottom: 4, letterSpacing: 0.5, textTransform: 'uppercase' },
-  description: {
-    fontSize: 14,
-    color: colors.text,
-    lineHeight: 20,
-    backgroundColor: colors.purpleSoft,
-    padding: 10,
-    borderRadius: radius.sm,
-  },
-  reason: { fontSize: 13, color: colors.red, marginTop: 8 },
-  actions: { flexDirection: 'row', gap: 8 },
-  topGap: { marginTop: 12 },
-  reasonInput: {
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    padding: 10,
-    minHeight: 60,
-    textAlignVertical: 'top',
-    color: colors.text,
-    marginBottom: 8,
-    fontSize: 14,
-  },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.card,
+      borderRadius: radius.lg,
+      borderLeftWidth: 4,
+      borderLeftColor: colors.purple, // purple = claims
+      padding: 14,
+      marginBottom: 12,
+      ...cardShadow,
+    },
+    itemRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingBottom: 12,
+      marginBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    thumb: { width: 38, height: 38, borderRadius: radius.sm },
+    itemTitle: { flex: 1, fontWeight: '700', color: colors.purple, fontSize: 15 },
+    header: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
+    name: { fontSize: 15, fontWeight: '700', color: colors.text },
+    date: { fontSize: 12, color: colors.muted, marginTop: 2 },
+    label: { fontSize: 11, fontWeight: '800', color: colors.purple, marginBottom: 4, letterSpacing: 0.5, textTransform: 'uppercase' },
+    description: {
+      fontSize: 14,
+      color: colors.text,
+      lineHeight: 20,
+      backgroundColor: colors.purpleSoft,
+      padding: 10,
+      borderRadius: radius.sm,
+    },
+    reason: { fontSize: 13, color: colors.red, marginTop: 8 },
+    actions: { flexDirection: 'row', gap: 8 },
+    topGap: { marginTop: 12 },
+    reasonInput: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: radius.sm,
+      padding: 10,
+      minHeight: 60,
+      textAlignVertical: 'top',
+      color: colors.text,
+      marginBottom: 8,
+      fontSize: 14,
+    },
+  });

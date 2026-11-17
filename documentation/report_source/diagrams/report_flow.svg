@@ -1,0 +1,196 @@
+<svg width="596pt" height="705pt"
+ viewBox="0.00 0.00 596.00 705.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(10.8 694.4)">
+<title>report</title>
+<polygon fill="white" stroke="none" points="-10.8,10.8 -10.8,-694.4 585.32,-694.4 585.32,10.8 -10.8,10.8"/>
+<!-- form -->
+<g id="node1" class="node">
+<title>form</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M196.79,-683.6C196.79,-683.6 21.99,-683.6 21.99,-683.6 15.99,-683.6 9.99,-677.6 9.99,-671.6 9.99,-671.6 9.99,-649.52 9.99,-649.52 9.99,-643.52 15.99,-637.52 21.99,-637.52 21.99,-637.52 196.79,-637.52 196.79,-637.52 202.79,-637.52 208.79,-643.52 208.79,-649.52 208.79,-649.52 208.79,-671.6 208.79,-671.6 208.79,-677.6 202.79,-683.6 196.79,-683.6"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-665.06" font-family="Helvetica,sans-Serif" font-size="15.00">Student fills the report form</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-647.06" font-family="Helvetica,sans-Serif" font-size="15.00">(optional photo)</text>
+</g>
+<!-- lock -->
+<g id="node2" class="node">
+<title>lock</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M206.77,-614.52C206.77,-614.52 12,-614.52 12,-614.52 6,-614.52 0,-608.52 0,-602.52 0,-602.52 0,-580.44 0,-580.44 0,-574.44 6,-568.44 12,-568.44 12,-568.44 206.77,-568.44 206.77,-568.44 212.77,-568.44 218.77,-574.44 218.77,-580.44 218.77,-580.44 218.77,-602.52 218.77,-602.52 218.77,-608.52 212.77,-614.52 206.77,-614.52"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-595.98" font-family="Helvetica,sans-Serif" font-size="15.00">Form locked; POST /api/items</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-577.98" font-family="Helvetica,sans-Serif" font-size="15.00">with submissionId</text>
+</g>
+<!-- form&#45;&gt;lock -->
+<g id="edge1" class="edge">
+<title>form&#45;&gt;lock</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-637.22C109.39,-633.08 109.39,-628.68 109.39,-624.32"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-624.61 109.39,-616.61 106.59,-624.61 112.19,-624.61"/>
+</g>
+<!-- unsure -->
+<g id="node3" class="node">
+<title>unsure</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M464.96,-614.52C464.96,-614.52 301.81,-614.52 301.81,-614.52 295.81,-614.52 289.81,-608.52 289.81,-602.52 289.81,-602.52 289.81,-580.44 289.81,-580.44 289.81,-574.44 295.81,-568.44 301.81,-568.44 301.81,-568.44 464.96,-568.44 464.96,-568.44 470.96,-568.44 476.96,-574.44 476.96,-580.44 476.96,-580.44 476.96,-602.52 476.96,-602.52 476.96,-608.52 470.96,-614.52 464.96,-614.52"/>
+<text xml:space="preserve" text-anchor="middle" x="383.39" y="-595.98" font-family="Helvetica,sans-Serif" font-size="15.00">No reply: keep data,</text>
+<text xml:space="preserve" text-anchor="middle" x="383.39" y="-577.98" font-family="Helvetica,sans-Serif" font-size="15.00">photo and id; retry is safe</text>
+</g>
+<!-- lock&#45;&gt;unsure -->
+<g id="edge4" class="edge">
+<title>lock&#45;&gt;unsure</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" stroke-dasharray="5,2" d="M219.25,-591.48C239.21,-591.48 259.97,-591.48 279.75,-591.48"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="279.7,-594.28 287.7,-591.48 279.7,-588.68 279.7,-594.28"/>
+<text xml:space="preserve" text-anchor="middle" x="254.29" y="-598.68" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">no reply</text>
+</g>
+<!-- sval -->
+<g id="node4" class="node">
+<title>sval</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M198.04,-545.44C198.04,-545.44 20.74,-545.44 20.74,-545.44 14.74,-545.44 8.74,-539.44 8.74,-533.44 8.74,-533.44 8.74,-511.36 8.74,-511.36 8.74,-505.36 14.74,-499.36 20.74,-499.36 20.74,-499.36 198.04,-499.36 198.04,-499.36 204.04,-499.36 210.04,-505.36 210.04,-511.36 210.04,-511.36 210.04,-533.44 210.04,-533.44 210.04,-539.44 204.04,-545.44 198.04,-545.44"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-526.9" font-family="Helvetica,sans-Serif" font-size="15.00">requireAuth, Multer checks,</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-508.9" font-family="Helvetica,sans-Serif" font-size="15.00">field validation</text>
+</g>
+<!-- lock&#45;&gt;sval -->
+<g id="edge2" class="edge">
+<title>lock&#45;&gt;sval</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-568.14C109.39,-564 109.39,-559.6 109.39,-555.24"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-555.53 109.39,-547.53 106.59,-555.53 112.19,-555.53"/>
+</g>
+<!-- exists -->
+<g id="node5" class="node">
+<title>exists</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M98.23,-471.93C98.23,-471.93 22.61,-441.91 22.61,-441.91 17.03,-439.69 17.03,-435.27 22.61,-433.05 22.61,-433.05 98.23,-403.03 98.23,-403.03 103.81,-400.81 114.96,-400.81 120.54,-403.03 120.54,-403.03 196.17,-433.05 196.17,-433.05 201.74,-435.27 201.74,-439.69 196.17,-441.91 196.17,-441.91 120.54,-471.93 120.54,-471.93 114.96,-474.15 103.81,-474.15 98.23,-471.93"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-441.98" font-family="Helvetica,sans-Serif" font-size="15.00">Already saved</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-423.98" font-family="Helvetica,sans-Serif" font-size="15.00">with this id?</text>
+</g>
+<!-- sval&#45;&gt;exists -->
+<g id="edge3" class="edge">
+<title>sval&#45;&gt;exists</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-499.18C109.39,-495.08 109.39,-490.65 109.39,-486.13"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-486.43 109.39,-478.43 106.59,-486.43 112.19,-486.43"/>
+</g>
+<!-- same -->
+<g id="node6" class="node">
+<title>same</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M299.61,-469.4C299.61,-469.4 264.58,-444.44 264.58,-444.44 259.69,-440.96 259.69,-434 264.58,-430.52 264.58,-430.52 299.61,-405.56 299.61,-405.56 304.5,-402.08 314.27,-402.08 319.16,-405.56 319.16,-405.56 354.19,-430.52 354.19,-430.52 359.08,-434 359.08,-440.96 354.19,-444.44 354.19,-444.44 319.16,-469.4 319.16,-469.4 314.27,-472.88 304.5,-472.88 299.61,-469.4"/>
+<text xml:space="preserve" text-anchor="middle" x="309.39" y="-441.98" font-family="Helvetica,sans-Serif" font-size="15.00">Same</text>
+<text xml:space="preserve" text-anchor="middle" x="309.39" y="-423.98" font-family="Helvetica,sans-Serif" font-size="15.00">details?</text>
+</g>
+<!-- exists&#45;&gt;same -->
+<g id="edge5" class="edge">
+<title>exists&#45;&gt;same</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M208.8,-437.48C220.9,-437.48 233.02,-437.48 244.43,-437.48"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="244.17,-440.28 252.17,-437.48 244.17,-434.68 244.17,-440.28"/>
+<text xml:space="preserve" text-anchor="middle" x="231.06" y="-444.68" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> yes</text>
+</g>
+<!-- upload -->
+<g id="node9" class="node">
+<title>upload</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M167.6,-359.8C167.6,-359.8 51.17,-359.8 51.17,-359.8 45.17,-359.8 39.17,-353.8 39.17,-347.8 39.17,-347.8 39.17,-325.72 39.17,-325.72 39.17,-319.72 45.17,-313.72 51.17,-313.72 51.17,-313.72 167.6,-313.72 167.6,-313.72 173.6,-313.72 179.6,-319.72 179.6,-325.72 179.6,-325.72 179.6,-347.8 179.6,-347.8 179.6,-353.8 173.6,-359.8 167.6,-359.8"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-341.26" font-family="Helvetica,sans-Serif" font-size="15.00">Upload photo to</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-323.26" font-family="Helvetica,sans-Serif" font-size="15.00">Cloudinary (if any)</text>
+</g>
+<!-- exists&#45;&gt;upload -->
+<g id="edge6" class="edge">
+<title>exists&#45;&gt;upload</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-398.03C109.39,-388.65 109.39,-378.71 109.39,-369.67"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-369.95 109.39,-361.95 106.59,-369.95 112.19,-369.95"/>
+<text xml:space="preserve" text-anchor="middle" x="119.12" y="-375" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> no</text>
+</g>
+<!-- r200 -->
+<g id="node7" class="node">
+<title>r200</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M394.14,-359.8C394.14,-359.8 222.64,-359.8 222.64,-359.8 216.64,-359.8 210.64,-353.8 210.64,-347.8 210.64,-347.8 210.64,-325.72 210.64,-325.72 210.64,-319.72 216.64,-313.72 222.64,-313.72 222.64,-313.72 394.14,-313.72 394.14,-313.72 400.14,-313.72 406.14,-319.72 406.14,-325.72 406.14,-325.72 406.14,-347.8 406.14,-347.8 406.14,-353.8 400.14,-359.8 394.14,-359.8"/>
+<text xml:space="preserve" text-anchor="middle" x="308.39" y="-341.26" font-family="Helvetica,sans-Serif" font-size="15.00">200: saved report returned</text>
+<text xml:space="preserve" text-anchor="middle" x="308.39" y="-323.26" font-family="Helvetica,sans-Serif" font-size="15.00">(app shows success)</text>
+</g>
+<!-- same&#45;&gt;r200 -->
+<g id="edge7" class="edge">
+<title>same&#45;&gt;r200</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M309,-398.31C308.9,-388.83 308.8,-378.76 308.71,-369.62"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="311.51,-369.77 308.63,-361.79 305.91,-369.82 311.51,-369.77"/>
+<text xml:space="preserve" text-anchor="middle" x="321.72" y="-375" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> yes</text>
+</g>
+<!-- r409 -->
+<g id="node8" class="node">
+<title>r409</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M562.52,-359.8C562.52,-359.8 440.25,-359.8 440.25,-359.8 434.25,-359.8 428.25,-353.8 428.25,-347.8 428.25,-347.8 428.25,-325.72 428.25,-325.72 428.25,-319.72 434.25,-313.72 440.25,-313.72 440.25,-313.72 562.52,-313.72 562.52,-313.72 568.52,-313.72 574.52,-319.72 574.52,-325.72 574.52,-325.72 574.52,-347.8 574.52,-347.8 574.52,-353.8 568.52,-359.8 562.52,-359.8"/>
+<text xml:space="preserve" text-anchor="middle" x="501.39" y="-341.26" font-family="Helvetica,sans-Serif" font-size="15.00">409: SUBMISSION</text>
+<text xml:space="preserve" text-anchor="middle" x="501.39" y="-323.26" font-family="Helvetica,sans-Serif" font-size="15.00">CONFLICT</text>
+</g>
+<!-- same&#45;&gt;r409 -->
+<g id="edge8" class="edge">
+<title>same&#45;&gt;r409</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M340.66,-420.4C370.08,-405.28 414.66,-382.35 449.42,-364.48"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="450.26,-367.19 456.1,-361.05 447.7,-362.21 450.26,-367.19"/>
+<text xml:space="preserve" text-anchor="middle" x="443.53" y="-375" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> no</text>
+</g>
+<!-- create -->
+<g id="node10" class="node">
+<title>create</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M155.93,-290.72C155.93,-290.72 62.84,-290.72 62.84,-290.72 56.84,-290.72 50.84,-284.72 50.84,-278.72 50.84,-278.72 50.84,-256.64 50.84,-256.64 50.84,-250.64 56.84,-244.64 62.84,-244.64 62.84,-244.64 155.93,-244.64 155.93,-244.64 161.93,-244.64 167.93,-250.64 167.93,-256.64 167.93,-256.64 167.93,-278.72 167.93,-278.72 167.93,-284.72 161.93,-290.72 155.93,-290.72"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-272.18" font-family="Helvetica,sans-Serif" font-size="15.00">Item.create(...)</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-254.18" font-family="Helvetica,sans-Serif" font-size="15.00">status ACTIVE</text>
+</g>
+<!-- upload&#45;&gt;create -->
+<g id="edge9" class="edge">
+<title>upload&#45;&gt;create</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-313.42C109.39,-309.28 109.39,-304.88 109.39,-300.52"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-300.81 109.39,-292.81 106.59,-300.81 112.19,-300.81"/>
+</g>
+<!-- dup -->
+<g id="node11" class="node">
+<title>dup</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M98.88,-215.84C98.88,-215.84 49.49,-188.56 49.49,-188.56 44.24,-185.66 44.24,-179.86 49.49,-176.96 49.49,-176.96 98.88,-149.68 98.88,-149.68 104.13,-146.78 114.64,-146.78 119.89,-149.68 119.89,-149.68 169.28,-176.96 169.28,-176.96 174.54,-179.86 174.54,-185.66 169.28,-188.56 169.28,-188.56 119.89,-215.84 119.89,-215.84 114.64,-218.74 104.13,-218.74 98.88,-215.84"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-187.26" font-family="Helvetica,sans-Serif" font-size="15.00">Duplicate</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-169.26" font-family="Helvetica,sans-Serif" font-size="15.00">key error?</text>
+</g>
+<!-- create&#45;&gt;dup -->
+<g id="edge10" class="edge">
+<title>create&#45;&gt;dup</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-244.46C109.39,-240.36 109.39,-235.93 109.39,-231.41"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-231.71 109.39,-223.71 106.59,-231.71 112.19,-231.71"/>
+</g>
+<!-- clean -->
+<g id="node12" class="node">
+<title>clean</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M377.47,-205.8C377.47,-205.8 239.31,-205.8 239.31,-205.8 233.31,-205.8 227.31,-199.8 227.31,-193.8 227.31,-193.8 227.31,-171.72 227.31,-171.72 227.31,-165.72 233.31,-159.72 239.31,-159.72 239.31,-159.72 377.47,-159.72 377.47,-159.72 383.47,-159.72 389.47,-165.72 389.47,-171.72 389.47,-171.72 389.47,-193.8 389.47,-193.8 389.47,-199.8 383.47,-205.8 377.47,-205.8"/>
+<text xml:space="preserve" text-anchor="middle" x="308.39" y="-187.26" font-family="Helvetica,sans-Serif" font-size="15.00">Delete the photo</text>
+<text xml:space="preserve" text-anchor="middle" x="308.39" y="-169.26" font-family="Helvetica,sans-Serif" font-size="15.00">this request uploaded</text>
+</g>
+<!-- dup&#45;&gt;clean -->
+<g id="edge12" class="edge">
+<title>dup&#45;&gt;clean</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M180.95,-182.76C192.85,-182.76 205.33,-182.76 217.63,-182.76"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="217.32,-185.56 225.32,-182.76 217.32,-179.96 217.32,-185.56"/>
+<text xml:space="preserve" text-anchor="middle" x="203.55" y="-189.96" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> yes</text>
+</g>
+<!-- r201 -->
+<g id="node13" class="node">
+<title>r201</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M170.12,-105.08C170.12,-105.08 48.65,-105.08 48.65,-105.08 42.65,-105.08 36.65,-99.08 36.65,-93.08 36.65,-93.08 36.65,-81.08 36.65,-81.08 36.65,-75.08 42.65,-69.08 48.65,-69.08 48.65,-69.08 170.12,-69.08 170.12,-69.08 176.12,-69.08 182.12,-75.08 182.12,-81.08 182.12,-81.08 182.12,-93.08 182.12,-93.08 182.12,-99.08 176.12,-105.08 170.12,-105.08"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-82.58" font-family="Helvetica,sans-Serif" font-size="15.00">201: report created</text>
+</g>
+<!-- dup&#45;&gt;r201 -->
+<g id="edge11" class="edge">
+<title>dup&#45;&gt;r201</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-143.39C109.39,-133.84 109.39,-123.81 109.39,-114.95"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-115.2 109.39,-107.2 106.59,-115.2 112.19,-115.2"/>
+<text xml:space="preserve" text-anchor="middle" x="119.12" y="-120.28" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> no</text>
+</g>
+<!-- clean&#45;&gt;r200 -->
+<g id="edge13" class="edge">
+<title>clean&#45;&gt;r200</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M308.39,-206.28C308.39,-232.14 308.39,-274.75 308.39,-303.98"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="305.59,-303.67 308.39,-311.67 311.19,-303.67 305.59,-303.67"/>
+<text xml:space="preserve" text-anchor="middle" x="352.35" y="-263.48" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">return existing</text>
+</g>
+<!-- ok -->
+<g id="node14" class="node">
+<title>ok</title>
+<path fill="white" stroke="#1f3a5f" stroke-width="1.2" d="M190.94,-46.08C190.94,-46.08 27.83,-46.08 27.83,-46.08 21.83,-46.08 15.83,-40.08 15.83,-34.08 15.83,-34.08 15.83,-12 15.83,-12 15.83,-6 21.83,0 27.83,0 27.83,0 190.94,0 190.94,0 196.94,0 202.94,-6 202.94,-12 202.94,-12 202.94,-34.08 202.94,-34.08 202.94,-40.08 196.94,-46.08 190.94,-46.08"/>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-27.54" font-family="Helvetica,sans-Serif" font-size="15.00">App: success, clear form,</text>
+<text xml:space="preserve" text-anchor="middle" x="109.39" y="-9.54" font-family="Helvetica,sans-Serif" font-size="15.00">new submissionId</text>
+</g>
+<!-- r201&#45;&gt;ok -->
+<g id="edge14" class="edge">
+<title>r201&#45;&gt;ok</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M109.39,-68.8C109.39,-64.82 109.39,-60.46 109.39,-56.08"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="112.19,-56.23 109.39,-48.23 106.59,-56.23 112.19,-56.23"/>
+</g>
+</g>
+</svg>

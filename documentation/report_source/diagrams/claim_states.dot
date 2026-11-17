@@ -1,0 +1,25 @@
+// Figure: Status transitions of an item and of a claim
+digraph states {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=16, nodesep=0.5, ranksep=0.45, pad=0.15];
+  node  [fontname="Helvetica", fontsize=15, shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#1F3A5F", penwidth=1.2, margin="0.18,0.09"];
+  edge  [fontname="Helvetica", fontsize=14, color="#4A5568", fontcolor="#2D3748", penwidth=1.1, arrowsize=0.8];
+
+  subgraph cluster_item {
+    label="Item status"; style="rounded"; margin=26; color="#9AA5B1"; fontcolor="#1F3A5F";
+    i0 [label="", shape=circle, width=0.22, style=filled, fillcolor="#1F3A5F"];
+    active [label="ACTIVE\n(listed in Browse)"];
+    recovered [label="RECOVERED\n(kept as history)"];
+    i0 -> active [label=" report created"];
+    active -> recovered [label=" FOUND: a claim\n is approved\n LOST: owner marks\n it recovered"];
+  }
+  subgraph cluster_claim {
+    label="Claim status"; style="rounded"; margin=26; color="#9AA5B1"; fontcolor="#1F3A5F";
+    c0 [label="", shape=circle, width=0.22, style=filled, fillcolor="#1F3A5F"];
+    pending [label="PENDING"];
+    approved [label="APPROVED"];
+    rejected [label="REJECTED"];
+    c0 -> pending [label=" claim submitted"];
+    pending -> approved [label="finder\napproves"];
+    pending -> rejected [label="rejected, or\nanother claim\napproved"];
+  }
+}

@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router/js-tabs';
+import { useTheme } from '@/context/ThemeContext';
 import { BrandTitle, ReportTabIcon, tabIcon, tabScreenOptions } from '@/components/tabBar';
 
 /**
@@ -7,8 +8,9 @@ import { BrandTitle, ReportTabIcon, tabIcon, tabScreenOptions } from '@/componen
  * The root layout only mounts this group for users whose role is STUDENT.
  */
 export default function StudentTabsLayout() {
+  const { colors } = useTheme();
   return (
-    <Tabs screenOptions={tabScreenOptions}>
+    <Tabs screenOptions={tabScreenOptions(colors, true)}>
       <Tabs.Screen
         name="home"
         options={{ title: 'Home', headerTitle: () => <BrandTitle />, tabBarIcon: tabIcon('home-outline', 'home') }}

@@ -1,0 +1,29 @@
+// Figure: Claim submission and verification workflow
+digraph claim {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=16, nodesep=0.4, ranksep=0.4, pad=0.2];
+  node  [fontname="Helvetica", fontsize=15, shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#1F3A5F", penwidth=1.2, margin="0.18,0.08"];
+  edge  [fontname="Helvetica", fontsize=14, color="#4A5568", fontcolor="#2D3748", penwidth=1.1, arrowsize=0.8];
+
+  open    [label="Student opens an ACTIVE FOUND item\nand taps Claim This Item"];
+  submit  [label="POST /api/items/:id/claims\n{ description, requestId }"];
+  push    [label="Atomic findOneAndUpdate + $push, only if:\nitem is FOUND and ACTIVE, claimant is not the reporter,\nclaimant has no claim yet, requestId unused"];
+  pending [label="Claim stored inside the item: PENDING\n(item stays ACTIVE and visible in Browse)"];
+  n1      [label="Notification to reporter:\nCLAIM_RECEIVED", fillcolor="white"];
+  review  [label="Reporter reviews claims\n(item page or Claims Received)"];
+  dec     [label="Decision", shape=diamond, fillcolor="white", margin="0.04,0.04"];
+  approve [label="One atomic update (only if item ACTIVE\nand claim PENDING):\nitem → RECOVERED, claim → APPROVED,\nother PENDING claims → REJECTED"];
+  reject  [label="Claim → REJECTED\n(optional reason); item stays ACTIVE"];
+  n2      [label="Notifications: CLAIM_APPROVED to claimant,\nCLAIM_CLOSED to other claimants", fillcolor="white"];
+  n3      [label="Notification: CLAIM_REJECTED\nto claimant", fillcolor="white"];
+  done    [label="Item hidden from active listings,\nkept in database; claimant and finder\narrange hand-over by email"];
+  again   [label="Other students may\nstill submit claims"];
+
+  open -> submit -> push -> pending -> review -> dec;
+  pending -> n1 [style=dashed];
+  dec -> approve [label="approve"];
+  dec -> reject  [label="reject"];
+  approve -> n2  [style=dashed];
+  approve -> done;
+  reject -> n3   [style=dashed];
+  reject -> again;
+}

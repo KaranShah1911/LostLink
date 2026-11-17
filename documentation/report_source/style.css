@@ -1,0 +1,201 @@
+/* Print stylesheet for the LostLink project report (rendered to PDF by headless Chrome). */
+
+:root {
+  --navy: #1f3a5f;
+  --text: #1a1a1a;
+  --muted: #555;
+  --rule: #c8ced6;
+  --shade: #f3f5f8;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 22mm 20mm 20mm 22mm;
+  @top-right {
+    content: "LostLink – Project Report";
+    font: 8.5pt "Liberation Sans", Arial, sans-serif;
+    color: #777;
+    vertical-align: bottom;
+    padding-bottom: 3mm;
+  }
+  @bottom-center {
+    content: counter(page);
+    font: 9pt "Liberation Sans", Arial, sans-serif;
+    color: #444;
+  }
+}
+/* Cover page: no header or page number */
+@page :first {
+  @top-right { content: none; }
+  @bottom-center { content: none; }
+}
+/* Dedicated landscape pages for large diagrams */
+@page land {
+  size: A4 landscape;
+  margin: 11mm 13mm 11mm 13mm;
+  @top-right {
+    content: "LostLink – Project Report";
+    font: 8.5pt "Liberation Sans", Arial, sans-serif;
+    color: #777;
+    vertical-align: bottom;
+    padding-bottom: 2mm;
+  }
+  @bottom-center {
+    content: counter(page);
+    font: 9pt "Liberation Sans", Arial, sans-serif;
+    color: #444;
+  }
+}
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0;
+  font-family: "Liberation Serif", "Times New Roman", serif;
+  font-size: 11.5pt;
+  line-height: 1.45;
+  color: var(--text);
+  background: white;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ---------- Headings ---------- */
+h1, h2, h3, .toc-title, .toc-sub, figcaption, th, .cover * {
+  font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+}
+h1 {
+  font-size: 17pt;
+  color: var(--navy);
+  margin: 18pt 0 8pt;
+  padding-bottom: 4pt;
+  border-bottom: 1px solid var(--rule);
+  break-after: avoid;
+  text-align: left;
+}
+h1.new-page { break-before: page; margin-top: 0; }
+h3 {
+  font-size: 12.5pt;
+  color: var(--navy);
+  margin: 12pt 0 4pt;
+  break-after: avoid;
+  text-align: left;
+}
+p { margin: 0 0 7pt; orphans: 3; widows: 3; }
+ul, ol { margin: 0 0 8pt; padding-left: 20pt; }
+li { margin-bottom: 3pt; }
+code, pre {
+  font-family: "Liberation Mono", "DejaVu Sans Mono", monospace;
+  font-size: 9.5pt;
+}
+code { color: #23344d; }
+pre {
+  background: var(--shade);
+  border: 1px solid var(--rule);
+  padding: 7pt 9pt;
+  line-height: 1.35;
+  text-align: left;
+  white-space: pre-wrap;
+  break-inside: avoid;
+}
+p.statement {
+  border-left: 3px solid var(--navy);
+  background: var(--shade);
+  padding: 7pt 10pt;
+}
+
+/* ---------- Tables ---------- */
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4pt 0 11pt;
+  font-family: "Liberation Sans", Arial, sans-serif;
+  font-size: 9.6pt;
+  line-height: 1.35;
+  text-align: left;
+}
+table.data th {
+  background: var(--navy);
+  color: white;
+  font-weight: bold;
+  padding: 4pt 6pt;
+  border: 1px solid var(--navy);
+}
+table.data td {
+  border: 1px solid var(--rule);
+  padding: 3.5pt 6pt;
+  vertical-align: top;
+}
+table.data tbody tr:nth-child(even) td { background: #fafbfc; }
+table.data tr { break-inside: avoid; }
+table.data thead { display: table-header-group; }
+table.data td.group { background: var(--shade) !important; font-weight: bold; color: var(--navy); }
+table.data code { font-size: 8.8pt; }
+table.data th code { color: white; }
+table.compact td { padding: 2.5pt 6pt; }
+table.fr td:first-child { white-space: nowrap; font-weight: bold; color: var(--navy); }
+
+/* ---------- Figures ---------- */
+figure { margin: 0; break-inside: avoid; }
+figcaption {
+  font-size: 9.5pt;
+  color: #333;
+  text-align: center;
+  margin-top: 5pt;
+}
+.fig-body svg { display: block; margin: 0 auto; height: auto; }
+/* Landscape figure page: the diagram fills the page width, limited by the page height. */
+section.landscape {
+  page: land;
+  break-before: page;
+  break-after: page;
+}
+section.landscape figure { height: 186mm; display: flex; flex-direction: column; justify-content: center; }
+section.landscape .fig-body svg { width: 100%; max-height: 177mm; }
+/* Full portrait page for a tall diagram */
+section.portrait-figure { break-before: page; break-after: page; }
+section.portrait-figure figure { height: 248mm; display: flex; flex-direction: column; justify-content: center; }
+section.portrait-figure .fig-body.tall svg { width: 100%; max-height: 236mm; }
+/* Small diagram placed in the text flow */
+figure.inline-figure { margin: 8pt 0 12pt; }
+.fig-body.small svg { width: 100%; max-height: 100mm; }
+.fig-body.medium svg { width: 100%; max-height: 172mm; }
+.fig-body.large svg { width: 100%; max-height: 222mm; }
+
+/* ---------- Cover ---------- */
+section.cover {
+  box-sizing: border-box; /* padding counts inside the height, so the cover never spills onto a second page */
+  height: 240mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  break-after: page;
+  padding-top: 2mm;
+}
+.cover-logo { width: 30mm; height: auto; margin-bottom: 8mm; }
+.cover-inst { font-size: 15pt; font-weight: bold; color: var(--navy); }
+.cover-dept { font-size: 12pt; color: #333; margin-top: 4pt; }
+.cover-rule { width: 60%; border-top: 1.5px solid var(--navy); margin: 13mm 0 11mm; }
+.cover-kind { font-size: 12pt; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
+.cover-title { font-size: 34pt; color: var(--navy); margin: 8pt 0 0; border: none; padding: 0; }
+.cover-sub { font-size: 16pt; color: #222; margin-top: 6pt; }
+.cover-desc { font-size: 11pt; color: var(--muted); margin-top: 12pt; line-height: 1.5; }
+/* Field names and values in fixed columns, so every value starts at the same position. */
+table.cover-fields { border-collapse: collapse; font-size: 12pt; }
+table.cover-fields td { padding: 5pt 0; text-align: left; vertical-align: top; color: #1a1a1a; }
+table.cover-fields td:nth-child(1) { width: 40mm; font-weight: bold; color: var(--navy); }
+table.cover-fields td:nth-child(2) { width: 6mm; }
+
+/* ---------- Contents ---------- */
+section.toc { break-after: page; }
+.toc-title { font-size: 18pt; color: var(--navy); margin: 0 0 12pt; border-bottom: 1px solid var(--rule); padding-bottom: 4pt; }
+.toc-sub { font-size: 13pt; color: var(--navy); margin: 18pt 0 8pt; }
+ol.toc-list { list-style: none; padding: 0; margin: 0; font-family: "Liberation Sans", Arial, sans-serif; font-size: 11pt; }
+ol.toc-list li { display: flex; align-items: baseline; margin: 0 0 5pt; }
+ol.toc-list li a { color: var(--text); text-decoration: none; }
+ol.toc-list li::after { content: ""; order: 1; flex: 1; border-bottom: 1px dotted #999; margin: 0 6pt; }
+ol.toc-list li .pg { order: 2; min-width: 16pt; text-align: right; }
+ol.toc-list.figs { font-size: 10.5pt; }
+
+ol.refs { font-size: 10.5pt; text-align: left; }
+a { color: inherit; text-decoration: none; }

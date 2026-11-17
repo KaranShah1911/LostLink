@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { colors } from '@/constants';
+import { ThemeColors } from '@/constants';
+import { useTheme } from '@/context/ThemeContext';
 
 interface AvatarProps {
   name: string;
@@ -9,6 +10,7 @@ interface AvatarProps {
 
 /** Profile photo, or the person's initials on a coloured circle when there is no photo. */
 export default function Avatar({ name, uri, size = 40 }: AvatarProps) {
+  const { styles } = useTheme(makeStyles);
   const circle = { width: size, height: size, borderRadius: size / 2 };
   if (uri) return <Image source={{ uri }} style={[circle, styles.image]} />;
 
@@ -26,8 +28,9 @@ export default function Avatar({ name, uri, size = 40 }: AvatarProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  image: { backgroundColor: colors.border },
-  fallback: { backgroundColor: colors.teal, alignItems: 'center', justifyContent: 'center' },
-  initials: { color: colors.white, fontWeight: '800' },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    image: { backgroundColor: colors.border },
+    fallback: { backgroundColor: colors.secondary, alignItems: 'center', justifyContent: 'center' },
+    initials: { color: colors.white, fontWeight: '800' },
+  });

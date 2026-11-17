@@ -1,23 +1,39 @@
 import { Router } from 'express';
-import { toPublicUser } from '../models/User';
+import { isThemeId, toPublicUser, User } from '../models/User';
 import { requireAuth } from '../middleware/authMiddleware';
 import { uploadImage as parseImage } from '../middleware/uploadMiddleware';
 import { deleteImage, uploadRequestImage } from '../config/cloudinary';
-import { asString } from '../utils/validation';
+import { asString, isValidId } from '../utils/validation';
 
 const router = Router();
 
 router.use(requireAuth);
 
-// PATCH /api/users/profile — body: { "name": "New Name" }. Only the name can be changed here;
-// email and role are never read from the request.
+// PATCH /api/users/profile — body: { "name"?: "New Name", "selectedTheme"?: "vjti" | "ocean" | "sunset" | "lavender" | "forest" }
+// Only the name and theme can be changed here; email and role are never read from the request.
 router.patch('/profile', async (req, res) => {
-  const name = asString(req.body?.name);
-  if (name.length < 2 || name.length > 60) {
-    return res.status(400).json({ success: false, message: 'Name must be between 2 and 60 characters' });
-  }
   const user = req.user!;
-  user.name = name;
+  const hasName = req.body?.name !== undefined;
+  const hasTheme = req.body?.selectedTheme !== undefined;
+  if (!hasName && !hasTheme) {
+    return res.status(400).json({ success: false, message: 'Nothing to update' });
+  }
+
+  if (hasName) {
+    const name = asString(req.body.name);
+    if (name.length < 2 || name.length > 60) {
+      return res.status(400).json({ success: false, message: 'Name must be between 2 and 60 characters' });
+    }
+    user.name = name;
+  }
+  if (hasTheme) {
+    const theme = asString(req.body.selectedTheme);
+    if (!isThemeId(theme)) {
+      return res.status(400).json({ success: false, message: 'Unknown theme' });
+    }
+    user.selectedTheme = theme;
+  }
+
   await user.save();
   res.json({ success: true, message: 'Profile updated', data: { user: toPublicUser(user) } });
 });
@@ -54,6 +70,37 @@ router.delete('/profile/image', async (req, res) => {
   await deleteImage(oldPublicId);
 
   res.json({ success: true, message: 'Profile photo removed', data: { user: toPublicUser(user) } });
+});
+
+// GET /api/users/notifications — the logged-in user's notifications, newest first, plus the unread count.
+router.get('/notifications', async (req, res) => {
+  const user = await User.findById(req.user!._id).select('+notifications');
+  const notifications = [...(user?.notifications ?? [])].reverse();
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  res.json({ success: true, data: { notifications, unreadCount } });
+});
+
+// PATCH /api/users/notifications/read-all — mark every notification as read.
+// Declared before "/:id/read" so "read-all" is not treated as an id.
+router.patch('/notifications/read-all', async (req, res) => {
+  await User.updateOne({ _id: req.user!._id }, { $set: { 'notifications.$[].isRead': true } });
+  res.json({ success: true, message: 'All notifications marked as read' });
+});
+
+// PATCH /api/users/notifications/:id/read — mark one notification as read.
+router.patch('/notifications/:id/read', async (req, res) => {
+  if (!isValidId(req.params.id)) {
+    return res.status(400).json({ success: false, message: 'Invalid notification id' });
+  }
+  // The filter includes the user id, so nobody can touch another user's notifications.
+  const result = await User.updateOne(
+    { _id: req.user!._id, 'notifications._id': req.params.id },
+    { $set: { 'notifications.$.isRead': true } }
+  );
+  if (result.matchedCount === 0) {
+    return res.status(404).json({ success: false, message: 'Notification not found' });
+  }
+  res.json({ success: true, message: 'Notification marked as read' });
 });
 
 export default router;

@@ -17,28 +17,45 @@ Final-year Computer Engineering mini-project. The full academic report is in [`d
 - **Accounts:** registration with an optional profile photo, login with JWT, session kept in Expo Secure Store, automatic logout when the token expires, show/hide password button.
 - **Keyboard-safe forms:** login, registration, report and claim forms scroll so the field being typed in is never hidden by the keyboard.
 - **Camera or Gallery:** every photo (item photos, profile photo) is chosen from a "Choose an Image" sheet with Camera and Gallery options. The photo can be previewed, retaken or removed before it is uploaded.
-- **VJTI campus photo:** faded behind the student Home screen, in its natural colours behind the Login and Sign up headers (with only a light shadow behind the white text), and faded behind the "Something went wrong / Try again" screen.
-- **Home:** faded VJTI campus photograph, welcome message, coral Report Lost / green Report Found shortcuts, live counts of active lost and found items, recent reports.
+- **VJTI campus photo:** a faded, full-screen campus photo behind Login, Sign up, Profile and the "Something went wrong / Try again" screen, and behind the top of the student Home screen. No other screen uses it, and it looks the same in every theme.
+- **Home:** welcome message, notification bell, coral Report Lost / green Report Found / Browse shortcuts, counts of active lost, active found and recovered items, How LostLink Works and Safety Guidelines cards, recent reports.
 - **Report Lost / Report Found:** item name, category (with icons), description, location, date (native picker) and an optional photo. For **lost** items, description and location are optional (the owner may not know where it was lost); for **found** items they are required.
-- **Browse:** active items only, All / Lost / Found filter, search by item name or category.
+- **Browse with advanced filters:**
+  - search by item name or category;
+  - a Filter panel with item type, category, location, date reported (24 h / 7 days / 30 days), status (active / recovered) and sort (newest / oldest);
+  - filters combine with each other and with search, and the active ones show as removable chips;
+  - all filtering and sorting is done by MongoDB on the server.
 - **Item details:** photo, category, description, location, date, reporter, status, **Claim This Item** (found items) and **Contact** buttons (`mailto:`).
 - **Claims:**
   - students claim a FOUND item by describing private identifying details;
   - the finder approves or rejects each claim;
   - approving one claim marks the item **RECOVERED** and closes all other pending claims automatically.
+- **Claim progress tracker:** a timeline (Claim submitted → Waiting for reporter → Approved / Rejected) with times, built from the claim's real status in MongoDB. It appears in My Claims and on the item page.
+- **In-app notifications:**
+  - a bell with an unread count in the student header;
+  - notifications for: a claim received on your found item, your claim approved, rejected, or closed because another claim was approved, and your report removed by an admin;
+  - tapping one opens the item; you can mark one or all as read;
+  - they are stored inside the user's own document (newest 50 kept), not in a separate collection.
+- **Themes:** Profile → Theme offers VJTI Classic, Ocean Breeze, Sunset, Lavender and Forest.
+  - The theme applies instantly and is saved both on the phone and on the user's account, so it survives restarts.
+  - Status colours (LOST, FOUND, PENDING, APPROVED, REJECTED) stay the same in every theme.
+- **How LostLink Works** and **Safety Guidelines** screens, opened from Home and Profile.
 - **My Activity:** My Reports, My Claims and Claims Received in one tab.
 - **Admin:**
-  - Dashboard with total users, active lost, active found and recovered counts, plus recent reports and pending claims;
-  - All Reports with View / Delete;
+  - Dashboard with total users, active lost, active found and recovered counts, a moderation summary (pending claims, reports this week, recovery rate), recent reports and pending claims;
+  - All Reports with search, Lost/Found and status filters, View / Delete (the reporter is notified when an admin removes a report);
   - Claims list, read-only (admins **cannot** approve or reject).
-- **Design:** one colour system in `mobile/src/constants.ts`.
-  - **Navy:** headers and primary buttons.
-  - **Teal:** secondary actions.
-  - **Coral:** lost.
-  - **Green:** found / success.
-  - **Purple:** claims.
-  - **Amber:** pending.
+- **Design:** one colour system in `mobile/src/constants.ts`, used through the `useTheme()` hook (`mobile/src/context/ThemeContext.tsx`).
+  - **Theme colours (change with the theme):** primary (headers, primary buttons), secondary (secondary actions, links, active tab), highlight, background.
+  - **Fixed colours, the same in every theme:**
+    - **Coral:** lost.
+    - **Green:** found / success.
+    - **Purple:** claims.
+    - **Amber:** pending.
   - Every status badge uses the same colour on every screen.
+- **No duplicate reports or claims:**
+  - **On the phone:** the report and claim forms lock completely while sending (overlay, disabled fields and photo buttons, no leaving the screen). If the connection drops, they say the result could not be confirmed and keep everything, so retrying is safe.
+  - **On the server:** each form sends a random idempotency key (`submissionId` / `requestId`), and MongoDB itself guarantees it is used only once. See [Duplicate protection](#duplicate-protection).
 - **Server-side security:** JWT on every protected route, ownership checks, admin-only routes, atomic claim updates, no password hashes or private claim text in public responses.
 
 ## Tech stack
@@ -217,10 +234,14 @@ Approval is a **single conditional MongoDB update**. It only succeeds if the ite
 | POST | `/api/auth/register` (JSON, or multipart with optional `image`) | Public |
 | POST | `/api/auth/login` | Public |
 | GET | `/api/auth/me` | Logged in |
-| PATCH | `/api/users/profile` | Logged in |
+| PATCH | `/api/users/profile` (`name` and/or `selectedTheme`) | Logged in |
 | POST | `/api/users/profile/image` (multipart `image`) | Logged in |
 | DELETE | `/api/users/profile/image` | Logged in |
-| GET | `/api/items?type=ALL\|LOST\|FOUND` | Logged in |
+| GET | `/api/users/notifications` | Logged in |
+| PATCH | `/api/users/notifications/:id/read` | Logged in |
+| PATCH | `/api/users/notifications/read-all` | Logged in |
+| GET | `/api/items?type=&category=&location=&q=&reported=&status=&sort=` | Logged in |
+| GET | `/api/items/stats` | Logged in |
 | GET | `/api/items/my` | Logged in |
 | GET | `/api/items/:id` | Logged in |
 | POST | `/api/items` (multipart, optional `image`) | Logged in |
@@ -242,7 +263,8 @@ Full request/response details and Postman instructions are in the [project repor
 
 Exactly **two** MongoDB collections. Claims are **embedded** in item documents; there is no claims collection.
 
-- **users**: `name`, `email` (unique), `password` (bcrypt hash, never returned), `role` (`STUDENT` / `ADMIN`), `profileImage`, `profileImagePublicId`, timestamps
+- **users**: `name`, `email` (unique), `password` (bcrypt hash, never returned), `role` (`STUDENT` / `ADMIN`), `profileImage`, `profileImagePublicId`, `selectedTheme`, `notifications[]`, timestamps
+  - each notification (embedded, newest 50 kept): `_id`, `type`, `title`, `message`, `relatedItem`, `relatedClaim`, `isRead`, `createdAt`
 - **items**: `title`, `type` (`LOST` / `FOUND`), `category`, `description`, `location`, `date`, `imageUrl`, `imagePublicId`, `reportedBy` (→ users), `status` (`ACTIVE` / `RECOVERED`), `claims[]`, timestamps
   - each claim: `_id`, `claimedBy` (→ users), `description` (private), `status` (`PENDING` / `APPROVED` / `REJECTED`), `rejectionReason`, timestamps
 
@@ -258,7 +280,22 @@ The guards are in `mobile/src/app/_layout.tsx`. Screens in a `Stack.Protected` g
 
 ## Credits
 
-Home screen photo: "VJTI College Quadrangle" by Paras2130, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:VJTI_College_Quadrangle.jpg), licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Campus photo (Login, Sign up, Home, Profile, error screen): "VJTI College Quadrangle" by Paras2130, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:VJTI_College_Quadrangle.jpg), licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+## Duplicate protection
+
+**Reports (`POST /api/items`)**
+- **The key:** the report form creates one `submissionId` (a random UUID) when it opens. It sends the same id with every attempt, and makes a new one only after the server confirms success.
+- **The guarantee:** the `items` collection has a **partial unique index** on `{ reportedBy, submissionId }`. Two reports with the same id can never be stored, even if the requests arrive at the same moment. The index only covers documents that have a `submissionId`, so older reports are unaffected.
+- **A retry with the same id:** returns the report that was already saved (`200`, `alreadySaved: true`), without uploading the photo again.
+- **Two requests at the same instant:** the second one gets MongoDB's duplicate-key error. It deletes the photo it had just uploaded and returns the first report.
+- **The same id with changed details:** the server returns `409 SUBMISSION_CONFLICT` with the saved report, instead of silently ignoring the changes.
+- **A failed save:** if the database save fails after the photo was uploaded, that photo is deleted from Cloudinary. It cannot belong to any report, because the save failed.
+
+**Claims (`POST /api/items/:id/claims`)**
+- **The key:** the claim form sends one `requestId`, which is stored in the embedded claim.
+- **The guarantee:** the atomic `$push` only matches if the student has no claim on the item and the `requestId` has not been used, so a claim can never be added twice.
+- **A retry of a saved claim:** returns that claim with `200`.
 
 ## Security notes
 

@@ -1,0 +1,100 @@
+<svg width="565pt" height="379pt"
+ viewBox="0.00 0.00 565.00 379.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(10.8 367.76)">
+<title>states</title>
+<polygon fill="white" stroke="none" points="-10.8,10.8 -10.8,-367.76 553.8,-367.76 553.8,10.8 -10.8,10.8"/>
+<g id="clust1" class="cluster">
+<title>cluster_item</title>
+<path fill="none" stroke="#9aa5b1" d="M20,-8C20,-8 212,-8 212,-8 218,-8 224,-14 224,-20 224,-20 224,-336.96 224,-336.96 224,-342.96 218,-348.96 212,-348.96 212,-348.96 20,-348.96 20,-348.96 14,-348.96 8,-342.96 8,-336.96 8,-336.96 8,-20 8,-20 8,-14 14,-8 20,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="116" y="-330.56" font-family="Helvetica,sans-Serif" font-size="16.00" fill="#1f3a5f">Item status</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_claim</title>
+<path fill="none" stroke="#9aa5b1" d="M244,-14.48C244,-14.48 523,-14.48 523,-14.48 529,-14.48 535,-20.48 535,-26.48 535,-26.48 535,-336.96 535,-336.96 535,-342.96 529,-348.96 523,-348.96 523,-348.96 244,-348.96 244,-348.96 238,-348.96 232,-342.96 232,-336.96 232,-336.96 232,-26.48 232,-26.48 232,-20.48 238,-14.48 244,-14.48"/>
+<text xml:space="preserve" text-anchor="middle" x="383.5" y="-330.56" font-family="Helvetica,sans-Serif" font-size="16.00" fill="#1f3a5f">Claim status</text>
+</g>
+<!-- i0 -->
+<g id="node1" class="node">
+<title>i0</title>
+<ellipse fill="#1f3a5f" stroke="#1f3a5f" stroke-width="1.2" cx="104" cy="-287.84" rx="7.92" ry="7.92"/>
+</g>
+<!-- active -->
+<g id="node2" class="node">
+<title>active</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M162.48,-231.12C162.48,-231.12 45.52,-231.12 45.52,-231.12 39.52,-231.12 33.52,-225.12 33.52,-219.12 33.52,-219.12 33.52,-194.16 33.52,-194.16 33.52,-188.16 39.52,-182.16 45.52,-182.16 45.52,-182.16 162.48,-182.16 162.48,-182.16 168.48,-182.16 174.48,-188.16 174.48,-194.16 174.48,-194.16 174.48,-219.12 174.48,-219.12 174.48,-225.12 168.48,-231.12 162.48,-231.12"/>
+<text xml:space="preserve" text-anchor="middle" x="104" y="-211.14" font-family="Helvetica,sans-Serif" font-size="15.00">ACTIVE</text>
+<text xml:space="preserve" text-anchor="middle" x="104" y="-193.14" font-family="Helvetica,sans-Serif" font-size="15.00">(listed in Browse)</text>
+</g>
+<!-- i0&#45;&gt;active -->
+<g id="edge1" class="edge">
+<title>i0&#45;&gt;active</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M104,-279.53C104,-270.76 104,-255.44 104,-241.19"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="106.8,-241.26 104,-233.26 101.2,-241.26 106.8,-241.26"/>
+<text xml:space="preserve" text-anchor="middle" x="149.52" y="-251.32" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> report created</text>
+</g>
+<!-- recovered -->
+<g id="node3" class="node">
+<title>recovered</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M154.31,-82.96C154.31,-82.96 45.69,-82.96 45.69,-82.96 39.69,-82.96 33.69,-76.96 33.69,-70.96 33.69,-70.96 33.69,-46 33.69,-46 33.69,-40 39.69,-34 45.69,-34 45.69,-34 154.31,-34 154.31,-34 160.31,-34 166.31,-40 166.31,-46 166.31,-46 166.31,-70.96 166.31,-70.96 166.31,-76.96 160.31,-82.96 154.31,-82.96"/>
+<text xml:space="preserve" text-anchor="middle" x="100" y="-62.98" font-family="Helvetica,sans-Serif" font-size="15.00">RECOVERED</text>
+<text xml:space="preserve" text-anchor="middle" x="100" y="-44.98" font-family="Helvetica,sans-Serif" font-size="15.00">(kept as history)</text>
+</g>
+<!-- active&#45;&gt;recovered -->
+<g id="edge2" class="edge">
+<title>active&#45;&gt;recovered</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M97.35,-181.58C96.22,-176.52 95.22,-171.2 94.63,-166.16 91.16,-136.5 92.62,-128.76 94.63,-98.96 94.78,-96.89 94.96,-94.75 95.17,-92.61"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="97.92,-93.15 96.05,-84.88 92.36,-92.51 97.92,-93.15"/>
+<text xml:space="preserve" text-anchor="middle" x="158.82" y="-153.56" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> FOUND: a claim</text>
+<text xml:space="preserve" text-anchor="middle" x="158.82" y="-136.76" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> is approved</text>
+<text xml:space="preserve" text-anchor="middle" x="158.82" y="-119.96" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> LOST: owner marks</text>
+<text xml:space="preserve" text-anchor="middle" x="158.82" y="-103.16" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> it recovered</text>
+</g>
+<!-- c0 -->
+<g id="node4" class="node">
+<title>c0</title>
+<ellipse fill="#1f3a5f" stroke="#1f3a5f" stroke-width="1.2" cx="363" cy="-287.84" rx="7.92" ry="7.92"/>
+</g>
+<!-- pending -->
+<g id="node5" class="node">
+<title>pending</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M398.13,-224.64C398.13,-224.64 327.87,-224.64 327.87,-224.64 321.87,-224.64 315.87,-218.64 315.87,-212.64 315.87,-212.64 315.87,-200.64 315.87,-200.64 315.87,-194.64 321.87,-188.64 327.87,-188.64 327.87,-188.64 398.13,-188.64 398.13,-188.64 404.13,-188.64 410.13,-194.64 410.13,-200.64 410.13,-200.64 410.13,-212.64 410.13,-212.64 410.13,-218.64 404.13,-224.64 398.13,-224.64"/>
+<text xml:space="preserve" text-anchor="middle" x="363" y="-202.14" font-family="Helvetica,sans-Serif" font-size="15.00">PENDING</text>
+</g>
+<!-- c0&#45;&gt;pending -->
+<g id="edge3" class="edge">
+<title>c0&#45;&gt;pending</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M363,-279.53C363,-269.38 363,-250.48 363,-234.61"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="365.8,-234.88 363,-226.88 360.2,-234.88 365.8,-234.88"/>
+<text xml:space="preserve" text-anchor="middle" x="413.57" y="-251.32" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748"> claim submitted</text>
+</g>
+<!-- approved -->
+<g id="node6" class="node">
+<title>approved</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M355.64,-76.48C355.64,-76.48 270.36,-76.48 270.36,-76.48 264.36,-76.48 258.36,-70.48 258.36,-64.48 258.36,-64.48 258.36,-52.48 258.36,-52.48 258.36,-46.48 264.36,-40.48 270.36,-40.48 270.36,-40.48 355.64,-40.48 355.64,-40.48 361.64,-40.48 367.64,-46.48 367.64,-52.48 367.64,-52.48 367.64,-64.48 367.64,-64.48 367.64,-70.48 361.64,-76.48 355.64,-76.48"/>
+<text xml:space="preserve" text-anchor="middle" x="313" y="-53.98" font-family="Helvetica,sans-Serif" font-size="15.00">APPROVED</text>
+</g>
+<!-- pending&#45;&gt;approved -->
+<g id="edge4" class="edge">
+<title>pending&#45;&gt;approved</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M336.62,-188.35C329.45,-182.24 322.53,-174.73 318.41,-166.16 306.35,-141.09 306.56,-108.77 308.81,-86.3"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="311.59,-86.66 309.75,-78.39 306.03,-86 311.59,-86.66"/>
+<text xml:space="preserve" text-anchor="middle" x="347.2" y="-136.76" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">finder</text>
+<text xml:space="preserve" text-anchor="middle" x="347.2" y="-119.96" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">approves</text>
+</g>
+<!-- rejected -->
+<g id="node7" class="node">
+<title>rejected</title>
+<path fill="#f4f6f9" stroke="#1f3a5f" stroke-width="1.2" d="M496.55,-76.48C496.55,-76.48 415.45,-76.48 415.45,-76.48 409.45,-76.48 403.45,-70.48 403.45,-64.48 403.45,-64.48 403.45,-52.48 403.45,-52.48 403.45,-46.48 409.45,-40.48 415.45,-40.48 415.45,-40.48 496.55,-40.48 496.55,-40.48 502.55,-40.48 508.55,-46.48 508.55,-52.48 508.55,-52.48 508.55,-64.48 508.55,-64.48 508.55,-70.48 502.55,-76.48 496.55,-76.48"/>
+<text xml:space="preserve" text-anchor="middle" x="456" y="-53.98" font-family="Helvetica,sans-Serif" font-size="15.00">REJECTED</text>
+</g>
+<!-- pending&#45;&gt;rejected -->
+<g id="edge5" class="edge">
+<title>pending&#45;&gt;rejected</title>
+<path fill="none" stroke="#4a5568" stroke-width="1.1" d="M374.03,-188.3C390.39,-162.59 421.18,-114.21 440.01,-84.61"/>
+<polygon fill="#4a5568" stroke="#4a5568" stroke-width="1.1" points="442.15,-86.46 444.09,-78.2 437.43,-83.45 442.15,-86.46"/>
+<text xml:space="preserve" text-anchor="middle" x="470.54" y="-145.16" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">rejected, or</text>
+<text xml:space="preserve" text-anchor="middle" x="470.54" y="-128.36" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">another claim</text>
+<text xml:space="preserve" text-anchor="middle" x="470.54" y="-111.56" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#2d3748">approved</text>
+</g>
+</g>
+</svg>

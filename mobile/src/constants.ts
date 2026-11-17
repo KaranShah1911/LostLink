@@ -1,23 +1,19 @@
 import type { ImageSourcePropType } from 'react-native';
 
 /**
- * LostLink design system. Every screen takes its colours from here.
+ * LostLink design system.
  *
- *   navy       headers, navigation, primary buttons
- *   teal       secondary actions, links, highlights
- *   turquoise  small accents on navy (logo, avatar ring)
+ * `palette` holds the colours that never change, whatever theme is chosen. They carry meaning:
  *   coral      "Report Lost" and attention elements
  *   green      found items, success, approved claims
  *   red        lost badges, rejected claims, destructive actions
  *   purple     everything about claims
  *   amber      pending / warning
+ *
+ * The theme colours (primary, secondary, highlight, background...) come from THEMES below and
+ * are read in components through useTheme() (src/context/ThemeContext.tsx).
  */
-export const colors = {
-  navy: '#13294B',
-  navyLight: '#2A4573',
-  teal: '#0D9488',
-  tealSoft: '#D9F3F0',
-  turquoise: '#2DD4BF',
+export const palette = {
   coral: '#F4673C',
   coralSoft: '#FEE8E0',
   green: '#16A34A',
@@ -29,24 +25,108 @@ export const colors = {
   amber: '#B45309',
   amberSoft: '#FEF1C7',
   yellow: '#F5B301',
-  background: '#F3F5FA',
   card: '#FFFFFF',
   white: '#FFFFFF',
   text: '#14213D',
   muted: '#64748B',
   border: '#E2E8F0',
-  onNavy: '#C7D4EA', // secondary text on navy backgrounds
 };
 
-/** One colour pair per status, so a status looks the same on every screen. */
+/** The colours a theme is allowed to change. */
+export interface ThemeTokens {
+  primary: string; // headers, navigation, primary buttons
+  primaryLight: string; // lighter version of primary
+  secondary: string; // secondary actions, links, active tab
+  secondarySoft: string; // light tint of secondary (chips, icon bubbles)
+  highlight: string; // small accents on the primary colour (logo, avatar ring)
+  background: string; // screen background
+  onPrimary: string; // secondary text on primary-coloured areas
+}
+
+export const THEME_IDS = ['vjti', 'ocean', 'sunset', 'lavender', 'forest'] as const;
+export type ThemeId = (typeof THEME_IDS)[number];
+
+/** The five themes offered in Profile → Theme. */
+export const THEMES: Record<ThemeId, { name: string; description: string; tokens: ThemeTokens }> = {
+  vjti: {
+    name: 'VJTI Classic',
+    description: 'Navy, teal and white',
+    tokens: {
+      primary: '#13294B',
+      primaryLight: '#2A4573',
+      secondary: '#0D9488',
+      secondarySoft: '#D9F3F0',
+      highlight: '#2DD4BF',
+      background: '#F3F5FA',
+      onPrimary: '#C7D4EA',
+    },
+  },
+  ocean: {
+    name: 'Ocean Breeze',
+    description: 'Blue, turquoise and mint',
+    tokens: {
+      primary: '#0B4F8A',
+      primaryLight: '#2F74B5',
+      secondary: '#0891B2',
+      secondarySoft: '#D4F1F7',
+      highlight: '#6EE7B7',
+      background: '#EEF8FA',
+      onPrimary: '#CFE6F7',
+    },
+  },
+  sunset: {
+    name: 'Sunset',
+    description: 'Coral, orange and warm yellow',
+    tokens: {
+      primary: '#B4421F',
+      primaryLight: '#D9603A',
+      secondary: '#EA7A0C',
+      secondarySoft: '#FDEBD3',
+      highlight: '#FCD34D',
+      background: '#FFF7EE',
+      onPrimary: '#FCE3D6',
+    },
+  },
+  lavender: {
+    name: 'Lavender',
+    description: 'Purple, lavender and white',
+    tokens: {
+      primary: '#4C1D95',
+      primaryLight: '#6D3FC0',
+      secondary: '#8B5CF6',
+      secondarySoft: '#EDE6FE',
+      highlight: '#C4B5FD',
+      background: '#F7F4FE',
+      onPrimary: '#DDD3F7',
+    },
+  },
+  forest: {
+    name: 'Forest',
+    description: 'Green, mint and cream',
+    tokens: {
+      primary: '#1F4D2E',
+      primaryLight: '#2F6B43',
+      secondary: '#15803D',
+      secondarySoft: '#DDF2E3',
+      highlight: '#86EFAC',
+      background: '#F8F6EC',
+      onPrimary: '#D6E8D9',
+    },
+  },
+};
+
+/** Everything a component can use: the fixed palette plus the current theme's colours. */
+export type ThemeColors = typeof palette & ThemeTokens;
+
+/** One colour pair per status. These are the same in every theme, so a status always looks the same. */
 export const STATUS_COLORS = {
-  LOST: { bg: colors.redSoft, fg: colors.red },
-  FOUND: { bg: colors.greenSoft, fg: colors.green },
-  ACTIVE: { bg: colors.tealSoft, fg: colors.teal },
+  LOST: { bg: palette.redSoft, fg: palette.red },
+  FOUND: { bg: palette.greenSoft, fg: palette.green },
+  ACTIVE: { bg: '#D9F3F0', fg: '#0D9488' },
   RECOVERED: { bg: '#E3EFE7', fg: '#3F7A56' },
-  PENDING: { bg: colors.amberSoft, fg: colors.amber },
-  APPROVED: { bg: colors.greenSoft, fg: colors.green },
-  REJECTED: { bg: colors.redSoft, fg: colors.red },
+  PENDING: { bg: palette.amberSoft, fg: palette.amber },
+  APPROVED: { bg: palette.greenSoft, fg: palette.green },
+  REJECTED: { bg: palette.redSoft, fg: palette.red },
 } as const;
 
 export const radius = { sm: 10, md: 14, lg: 18, xl: 26, pill: 999 };

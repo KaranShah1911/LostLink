@@ -39,6 +39,9 @@ const claimSchema = new Schema(
     description: { type: String, required: true, trim: true, minlength: 10, maxlength: 1000 },
     status: { type: String, enum: CLAIM_STATUSES, default: 'PENDING' },
     rejectionReason: { type: String, trim: true, maxlength: 300 },
+    // Random id the app creates once per claim form. Re-sending the same id (after a timeout)
+    // returns this claim instead of adding another one. See POST /api/items/:id/claims.
+    requestId: { type: String, maxlength: 64 },
   },
   { timestamps: true }
 );
@@ -60,6 +63,13 @@ const itemSchema = new Schema(
     // select: false means claims are never included in item responses unless a route
     // explicitly asks for them with .select('+claims'). This keeps claim details private.
     claims: { type: [claimSchema], default: [], select: false },
+    // Idempotency key: a random id the app creates once per report form. If the same id is
+    // sent again (e.g. the user retries after a timeout), the existing report is returned
+    // instead of creating a duplicate. Guaranteed by the unique index below.
+    submissionId: { type: String, maxlength: 64 },
+    // Fingerprint of what was submitted with that id, to detect the same id being reused
+    // for different details. Internal only, never sent to the app.
+    submissionHash: { type: String, select: false },
   },
   { timestamps: true }
 );
@@ -70,6 +80,12 @@ itemSchema.index({ status: 1, type: 1, createdAt: -1 });
 itemSchema.index({ reportedBy: 1, createdAt: -1 });
 // My Claims: items a user has claimed.
 itemSchema.index({ 'claims.claimedBy': 1 });
+// Report idempotency: one item per (reporter, submissionId). The index is "partial", so it only
+// covers documents that have a submissionId. Reports created before this field existed are ignored.
+itemSchema.index(
+  { reportedBy: 1, submissionId: 1 },
+  { unique: true, partialFilterExpression: { submissionId: { $type: 'string' } } }
+);
 
 export type ItemFields = InferSchemaType<typeof itemSchema>;
 

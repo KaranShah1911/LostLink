@@ -68,6 +68,19 @@ Capture these screenshots from the **running app on a real device or emulator** 
 - [ ] C9 – Claimant's Claims → My Claims showing APPROVED with "Email" button
 - [ ] C10 – Other claimant's My Claims showing REJECTED with the reason
 
+## New features
+
+- [ ] N1 – Home with the notification bell showing an unread count, three stat cards and the help cards
+- [ ] N2 – Notifications screen (unread items highlighted)
+- [ ] N3 – Browse filter panel with several filters selected
+- [ ] N4 – Browse results with the active filter chips
+- [ ] N5 – My Claims with the progress tracker (pending), then approved
+- [ ] N6 – Profile with the theme list (full-screen campus photo behind)
+- [ ] N7 – The same Home screen in two different themes (e.g. VJTI Classic and Sunset)
+- [ ] N8 – How LostLink Works and Safety Guidelines screens
+- [ ] N9 – Admin Dashboard moderation summary
+- [ ] N10 – MongoDB Atlas user document showing `selectedTheme` and the embedded `notifications` array
+
 ## Backend & cloud evidence
 
 - [ ] 27 – Terminal showing the backend running (`LostLink API running on http://0.0.0.0:5000`)

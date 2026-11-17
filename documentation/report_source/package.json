@@ -1,0 +1,12 @@
+{
+  "name": "lostlink-report",
+  "private": true,
+  "description": "Builds documentation/LostLink_Project_Report.pdf from report.html and the diagram sources",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@hpcc-js/wasm-graphviz": "^1.30.0"
+  }
+}
