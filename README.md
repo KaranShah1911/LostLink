@@ -278,10 +278,6 @@ Exactly **two** MongoDB collections. Claims are **embedded** in item documents; 
 
 The guards are in `mobile/src/app/_layout.tsx`. Screens in a `Stack.Protected` group whose guard is false do not exist for that user. A student cannot open admin screens, an admin cannot open the report or claim forms, and a logged-out user can only see Login and Register. Anyone who tries is sent to `index.tsx`, which redirects to the right starting screen. The backend still checks the role on every request.
 
-## Credits
-
-Campus photo (Login, Sign up, Home, Profile, error screen): "VJTI College Quadrangle" by Paras2130, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:VJTI_College_Quadrangle.jpg), licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
-
 ## Duplicate protection
 
 **Reports (`POST /api/items`)**
